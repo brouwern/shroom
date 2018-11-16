@@ -1,7 +1,7 @@
 Package: shroom
-Title: What the Package Does (One Line, Title Case)
+Title: Example Analyses for Cell and Molecular Biology
 Version: 0.0.0.9000
-Authors@R: 
+Authors@R:
     person(given = "First",
            family = "Last",
            role = c("aut", "cre"),
@@ -10,10 +10,11 @@ Description: What the package does (one paragraph).
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports: 
+Imports:
     dplyr,
-    tidyr
-Suggests: 
+    tidyr,
+    plotrix
+Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr

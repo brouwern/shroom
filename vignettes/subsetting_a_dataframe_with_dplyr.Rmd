@@ -1,0 +1,191 @@
+---
+title: "Subsetting a dataframe with dplyr"
+author: "Nathan Brouwer"
+date: "November 12, 2018"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+This tutorial will show you how to remove unwanted columns and subset particular rows from a dataset.
+
+
+## Loading the shroom package & wingscores data
+
+If you haven't already, download the shroom package.  See the vignette "Loading the shroom package" for details.
+
+Load **shroom** into your current R session using library()
+```{r, eval = FALSE}
+library(shroom)
+```
+
+
+Load the **wingscores** data ionto your current R sessions
+```{r}
+data("wingscores")
+```
+
+
+## Loading the dplyr package
+
+We'll also need the dplyr packge.
+
+Download it if you haven't already.
+```{r, eval = F}
+## don't run this if you have already downloaded dplyr before
+# (remove "#" to run code)
+
+# install.packages("dplyr")
+```
+
+
+Load dplyr into your current R sessions
+
+```{r}
+library(dplyr)
+```
+
+
+
+## The wingscores data
+
+The wingscores data is big: 7754 rows by 16 columns
+```{r}
+dim(wingscores)
+```
+
+Each row is data on a single fly scored for "wing crinklieness" by a student.
+
+Many of the columns are not necessary for carrying out an analysis.    FOr example the column "file" is just the original Excel file that the student entered their data in to.
+
+```{r}
+summary(wingscores$file, 10)
+```
+
+
+
+## Subsetting data
+
+Many of the columns in the dataset are not informative for any kind of analysis.  For simple, preliminary data exporation and analyes we also don't want all ~7500 rows of data.  
+
+What we'll do next is
+
+* Remove some un-needed columns using dplyr::select
+* Select a subset of columns with dplyr::filter
+
+### Remove un-needed columns with select()
+
+We can remove a single column by using the syntax "select(-column.name)", with a "-" in front of the colum name to indicate we want it removed.
+
+```{r}
+wingscores.no.file.name <- wingscores %>% 
+  select(-file)
+```
+
+THe original dataframe had 16 columns; without the "file" column it just has 15.
+```{r}
+ncol(wingscores)
+ncol(wingscores.no.file.name)
+```
+
+
+We can just write out all the columns we don't want, putting a "-" before each column name.
+
+```{r select.1}
+wingscores2 <- wingscores %>% 
+                   select(-gene,
+                          -seat,
+                          -section,
+                          -loaded,
+                          -stock.num,
+                          -file,
+                          -temp.C,
+                          -group,
+                          -gene.allele)
+```
+
+Data frame now has only 7 columns
+```{r}
+dim(wingscores2)
+```
+
+### Subset particular rows with filter
+
+There are about 250 students and each is assigned a sequential ID number.
+```{r}
+summary(wingscores2$student.ID)
+```
+
+If we just want to look at the #1's we can use the filter function.  Note the double equals signs ("==")
+
+```{r}
+wingscores_s1 <- wingscores2 %>% 
+   filter(student.ID ==  1)
+```
+
+
+This results in a dataframe with just the 60 flies which studnet 1 worked on.
+```{r}
+dim(wingscores_s1)
+```
+
+
+
+### Subsetting by multiple conditions use "&"
+
+We can subset by multple conditiosn using "&" between conditions.  Let's subset just the female (XX) flies from student 1.
+
+```{r}
+wingscores_s1F <- wingscores_s1 %>% 
+                     filter(student.ID ==  1 &
+                                   sex == "F")
+```
+
+Student 1 looked at just 24 flies.
+```{r}
+dim(wingscores_s1F)
+```
+
+
+### Subsetting by multiple conditions use "%in%"
+
+We can also subset by multiple conditions using %in% and a vector of posibilities.  
+
+Students 1, 2 and 3 are all in section 1 of the lab and all work on different alleles of the same gene, able.  I can select them by filtering by all student IDs "in" a vector contains 1, 2 and 3.
+
+The function in is a bit odd: %in%
+
+A vector possibilities would look like this: c(1,2,3)
+
+```{r}
+wngscrs_sxn1_able <- wingscores.no.file.name %>% 
+                     filter(student.ID %in% c(1,2,3))
+```
+
+
+
+These 3 together looked 159 flies
+```{r}
+dim(wngscrs_sxn1_able)
+```
+
+This is equivalent, using c(1:3) instead of c(1,2,3)
+```{r}
+wngscrs_sxn1_able <- wingscores.no.file.name %>% 
+                     filter(student.ID %in% c(1:3))
+```
+
+
+
+Similarly, I can subset the first 18 students, who all were in the same lab section.  "c(1:18)" Produces a vector containing all numbers 1 to 18.
+
+```{r}
+wngscrs_sxn1 <- wingscores.no.file.name %>% 
+                     filter(student.ID %in% c(1:18))
+```

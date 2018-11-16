@@ -54,6 +54,7 @@ use_git_ignore(".pdf", directory = ".")
 ```{r, eval = F}
 use_package("dplyr", "Imports")
 use_package("tidyr", "Imports")
+use_package("plotrix", "Imports")
 ```
 
 
@@ -61,6 +62,7 @@ use_package("tidyr", "Imports")
 
 ```{r}
 file. <- here::here("./inst/extdata","data_ind_fly_wing_scores_2018.csv")
+
 wingscores <- read.csv(file.)
 use_data(wingscores)
 ```

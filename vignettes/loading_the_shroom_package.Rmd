@@ -1,0 +1,64 @@
+---
+title: "Loading the shroom package"
+author: "Nathan Brouwer"
+date: "November 12, 2018"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+## Loading devtools
+
+If you haven't already, downloaded the **devtools** package (This isn't necessary if you have downloaded it recently )
+
+```{r, eval = FALSE}
+#Only do this if you have -never- downloaded 
+#devtools before
+install.packages("devtools")
+```
+
+Load **devtools** into your current R session using library()
+```{r, eval = F}
+library(devtools)
+```
+
+
+## Loading shroom
+
+If you haven't done so recently, download the **shroom** package from github.  (The function is install_github() but what it really is doing is copying the files from GitHub to your computer).
+```{r, eval = FALSE}
+devtools::install_github("brouwern/shroom")
+```
+
+
+Load **shroom** into your current R session using library()
+```{r, eval = FALSE}
+library(shroom)
+```
+
+
+## Looking at shroom data
+
+You can check to see if it worked by loading a dataset
+
+```{r}
+data("wingscores")
+```
+
+and looking at it with summary().  Here, we'll just look at a single column that has the scores.
+```{r}
+summary(wingscores$wing.score)
+```
+
+and plot it
+
+```{r}
+hist(wingscores$wing.score)
+```
+
