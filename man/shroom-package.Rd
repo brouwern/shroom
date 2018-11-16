@@ -4,7 +4,7 @@
 \name{shroom-package}
 \alias{shroom}
 \alias{shroom-package}
-\title{shroom: What the Package Does (One Line, Title Case)}
+\title{shroom: Example Analyses for Cell and Molecular Biology}
 \description{
 What the package does (one paragraph).
 }
