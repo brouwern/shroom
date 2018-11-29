@@ -1,8 +1,8 @@
 ---
-title: "f) Analysis walthrough: 2-way factorial model"
+title: "f3) Analysis walthrough: 2-way factorial model"
 author: "Nathan Brouwer"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: rmarkdown::pdf_document
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEncoding{UTF-8}

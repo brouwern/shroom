@@ -1,5 +1,5 @@
 ---
-title: "f) Analysis walthrough: 2-way factorial model"
+title: "f4) Analysis walthrough: Nested ANOVA"
 author: "Nathan Brouwer"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
