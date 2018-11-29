@@ -13,7 +13,19 @@ LazyData: true
 Imports:
     dplyr,
     tidyr,
-    plotrix
+    plotrix,
+    data.table,
+    data.tree,
+    treemap,
+    igraph,
+    ggplot2,
+    nlme,
+    lme4,
+    bbmle,
+    RCurl,
+    GGally,
+    broom,
+    ggpubr
 Suggests:
     knitr,
     rmarkdown

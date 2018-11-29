@@ -1,0 +1,42 @@
+---
+title: "s1) Stub - Probablistic index models"
+author: "Nathan Brouwer"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+These are notes for a tutorial that hasn't been written
+
+
+Probalistic index models
+
+https://cran.r-project.org/web/packages/pim/index.html
+
+```{r, eval = F}
+library(pim)
+
+wb <- aggregate(warpbreaks$breaks,
+                by = list(w = warpbreaks$wool,
+                          t = warpbreaks$tension),
+                FUN = mean)
+
+
+comp <- expand.grid(1:nrow(warpbreaks), 
+                    1:nrow(warpbreaks))
+comp <- comp[warpbreaks$tension[comp[,1]] == warpbreaks$tension[comp[,2]],] # only compare within blocks
+m <- pim(breaks ~ wool, data = warpbreaks, compare = comp, link = "identity",  vcov.estim = score.vcov)
+summary(m)
+friedman.test(x ~ w | t, data = wb)
+```

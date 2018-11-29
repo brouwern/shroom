@@ -1,0 +1,326 @@
+---
+title: "f) Analysis walthrough: 2-way factorial model"
+author: "Nathan Brouwer"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  eval = FALSE,
+  comment = "#>"
+)
+```
+
+
+THIS TUTORIAL HAS NOT BEEN FULLY SET UP AND PROBABLY MAKES NOT SENSE!!!!!!!!!!!!!
+
+
+NOTE to self: currently eval = FALSE is SET GLOBABLLY! 
+
+
+## Introduction
+
+This tutorial walks through some types of analysis that can be done using the shroom package.  In particular it looks at the situation when you have data that can be group by two seperate categorical variables.  In our data, we will look at the impacts of both sex (male vs. female) and experimental group (control vs. mutation to candidation gene) on wing scores.
+
+In the previous tutorial we used t-tests and similar analyses to look at just the impact of mutation ("experimental" flies) on wing scores of the female flies collected by one student, ignoring the males they collected.  In this tutorial we will look at all of the flies collected by the same student.
+
+
+## Preliminaries
+
+### Load packages
+
+
+Load the shroom package.  You can download it with instal.packages("shroom") if you haven't used it ever before.  See "Loading the shroom package" for more information.
+```{r}
+library(shroom)
+```
+
+Load other essential packages
+```{r}
+library(ggpubr)  #plotting
+library(cowplot)
+
+library(dplyr)   #data cleaning
+
+library(car)
+
+
+library(bbmle)   #AIC taBLE
+library(lme4)
+library(lawstat) #?
+library(effsize) #Cohen's dw
+```
+
+
+### Load data
+
+#### Loading data directly from the shroom package
+
+The data are internal to the package and so can be easily loaded.
+
+```{r}
+data("wingscores")
+```
+
+
+## Cleaning and subsetting the wing data
+
+This information is covered in more detail in "Subsetting a dataframe with dplyr."
+
+### Examine raw data
+
+```{r}
+dim(flies)
+names(flies)
+head(flies)
+```
+
+
+### Clean the raw data
+
+* Remove some un-needed columns using select().  
+* Note "-" before each column name.
+
+```{r select.1}
+flies <- flies %>% select(-stock.num,
+                          -loaded,
+                          -file,
+                          -gene,
+                          -temp.C)
+```
+
+Data frame now has fewer columns
+```{r}
+dim(flies)
+```
+
+
+
+## Data analysis: 1-way ANOVA
+
+
+
+
+### Comparing multiple alleles of the same gene
+
+For each of our 6 candidate genes (abl, fhos, etc) we have 3 seperate alleles.  Each allele is a different mutation that knocks out the gene in some way (point mutation, frameshift, large deletion of part of the chromosome encompassing the gene, etc).  The reason we are looking at multiple alleles of each gene is to test whether the effects of knocking out a given gene are generalizable or specific to a particular mutant allele.  If all 3 alleles have consistent effects, then that gives us confidence than we understand the biology of the gene and how it interacts with shroom.  
+
+There's 2 ways we could look to see if the 3 alleles have a consistent effect.  First, we could do a 3 seperate t-tests, one for each allele and count up the number of nominally "significant" tests.  We have to keep in mind that the t-test is agnostic with regards to the direction of any differences and make sure we look at the data themselves.  What we want is to have consistently significant differences all in the same direction (eg experimental flies all have lower scores), not just consistently significant differences (eg two alleles could have experimental flies with significantly lower scores, and the 3rd could have significantly higher scores).
+
+Second, we could calculate the average effect of all of the mutations in this allele and see if it is significantly different from zero.  The easiest way to do this would to calculate the difference between control and experimental flies for each allele, and then take the mean of those three alleles.   Just taking the means, however, won't get us confidence intervals or p-values; that will require a bit more stats.  Below I'll show different ways to calculate an average effect of mutating a gene and to calculate a confidence interval around that effect.
+
+
+### Subset data for a single gene
+
+First, we need data from a single class for all 3 alleles of one gene.  Students in the class are organized in benches, and the 3 students sharing a bench all are working on the 3 alleles of a single gene.  
+
+Here, I'll use the filter() command to take data for students 1, 2 and 3 who all sit next to each other work on the 3 alleles of the able gene.  I'll just consider the female flies.
+
+
+```{r}
+student123.F <- flies %>% filter(student.ID %in%  c(1,2,3) &
+                                    sex == "F")
+```
+
+
+These three students happened to look at 73 female flies.
+```{r}
+dim(student123.F)
+```
+
+
+These boxplots show that for 2 of the 3 genes, the experimental flies had lower wing scores than control flies.  The 3rd allele had a very low sample size, as indicated by the lack of boxes in its box plot.
+```{r}
+ggboxplot(data = student123.F,
+            y = "wing.score",
+            x = "E.or.C",
+            add = "mean",
+            fill = "E.or.C",
+          facet.by = "allele")
+```
+
+
+### Calculate effect sizes for each allele by hand
+
+For a single allele, the difference between the mean of control flies and experimental flies can be thought of as the experimental effect, or the **effect size.**  We can use dplyr group_by() and summarize() functions to get the means and other information on each of the 3 alleles. 
+
+Here I save the output of the dplyr functions to an object called "means.123"
+```{r}
+means.123 <- student123.F %>% 
+  group_by(allele, E.or.C) %>% 
+  summarize(mean = mean(wing.score),
+            n = n(),
+            sd = sd(wing.score),
+            SE = std.error(wing.score))
+```
+
+Note that the sample size varies a lot between alleles and also experimental vs. controls; there are always fewer experimental flies than controls.
+```{r}
+means.123
+```
+
+
+To calculate an effect size we want to subtract the mean of the experimental flies from the mean of the control flies.  This will be easier if we re-orient out dataframe, putting all the "C" means in one column and all the "E" means  in another.  We can do this with the spread() function from the tidyr package.  
+
+(This is a bit tricky; Note that I also have to use the select() command to just grab the 3 columns that I want to feed into spread.  Allele serves as the ID column, E.or.C has what will be the new column names, and mean has the values that will go into the new column names.  I pretty bad at dplyr and tidyr actually - this took me 10 minutes to figure out).
+
+```{r}
+means.123.wide <- means.123 %>% 
+  select(allele, E.or.C, mean) %>%
+  spread(key = E.or.C, value = mean)
+
+means.123.wide
+```
+
+
+Once we have the means side by side we can calculate the difference.  There are several ways to do this; using the mutate() function is handy because it creates a new column for us on the fly.
+
+```{r}
+means.123.wide <- means.123.wide %>% 
+  mutate(difference = E-C)
+
+means.123.wide
+```
+
+I can calculate the mean of the 3 differences and see that on average, mutating the able genes causes a reduction in the wing score of -0.84.
+```{r}
+mean(means.123.wide$difference)
+```
+
+
+A fancy way we could get this same result is to build a linear model for the mean of the differences, using the "~1" notation to indicate "just give me the mean."  This is the format we use for "null" models which assume there are no differences between groups.
+```{r}
+summary(lm(difference ~ 1, data = means.123.wide))
+```
+
+Under coefficients on the "(Intercept)" line in the "Estimate" column is -0.83, same as the mean above.  We also get a standard error based on the standard deviation of these three data point.
+
+
+One thing we saw above was that the same size varied a lot between E and C and between the alleles.  
+```{r}
+means.123[,c("allele", "n")]
+```
+
+So, if we take just the mean of each group, calculate the difference, and take the mean of the three differences, we are ignoring that sample size impacts how precise our estimate of the mean is.  In essence, we are treating a sample with 30 flies (abl[04674]) that same as one with 19 flies (Df(3L)ED223). Small sample sizes can result in biased estimate of the mean, and so treating all the sample sizes as if they were equal could through off our data.  A reasonable alternative might be to give more weight to alleles with larger sample sizes and allow them to have more influence over the results.   
+
+A related issue is that the standard errors (SE) varied a lot between samples: from 0.15 to 0.39.  Standard errors depend on both the sample size and the the standard deviation.  The standard error tells you how precisely the mean has been estimated, and standard errors get bigger (indicating less precision) when sample sizes get small and standard deviations get bigger.  Ignoring the different standard errors at play treats a precisely estimated mean the same as an imprecisely estimated one.  A reasonable alternative might be to give alleles with smaller sample sizes more weight.
+
+## Weighted regression
+
+Let's take a stab at correcting for differences in the variablity of samples.  Will use the standard deviation for our weights.  
+
+Let's reshape our data again, this time setting up the standard deviations into columns
+```{r}
+sd.123.wide <- means.123 %>% 
+  dplyr::select(allele, E.or.C, sd) %>%
+  spread(key = E.or.C, value = sd)
+
+sd.123.wide
+```
+
+We converted out two mean values into a difference through subtraction.  We now want a weight value based on the standard devaition to go along with each difference.  But we have two standard deviations for each allele.  What we can do is take the simple average of them and use that as our weight.  (We'd normally do a formal calculation of the **pooled standard deviation**, but that woudl take more math).
+
+We can use the mutate function the take the mean of the C and E columns and their respective standard deviations
+
+```{r}
+sd.123.wide <- sd.123.wide %>% mutate(sd.ave = mean(c(C,E)))
+```
+
+
+Now let's make a little dataframe for our differences and weights.  We'll combine the important parts of the means.123.wide dataframe and the sd.123.wide dataframe
+
+```{r}
+part1 <- means.123.wide[,c("allele","difference")]
+part2 <-  sd.123.wide[,c("sd.ave")]
+
+diffs.df <- data.frame(part1,part2)
+
+diffs.df
+```
+
+
+Now, what we want to do is use the lm() function to calcualte the mean of the differences of the 3 alleles, while also doing some fancy-ish math to give different weights to each differene based on its standard deviation; the differences associated with small standard deivations will be given more influence over the final mean, and the differences associated  with large standard deviations will be given less weight.  To do this, we can use 1/SD as our weight. 1/(large sd) = small number = small weight. 1/(smaller sd) = larger number = larger weight.
+
+We can asisgn these weights using the weight = arugement in R.
+
+
+```{r}
+sd(diffs.df.2$difference)
+```
+
+```{r}
+es <- escalc(measure = "MD",
+       mean/sd ~ E.or.C|allele,
+       weights = n,
+       data = means.123)
+
+rma(es)
+```
+
+
+```{r}
+escalc(mesure = "MD",
+       m1i = ,m2i = ,
+       data = diffs.df.2,
+       )
+```
+
+
+```{r}
+summary(lm(difference ~ 1, 
+           data = diffs.df.2,
+           weights = 1/(1.077465^2+pool.sd^2)))
+
+diffs.df.2$pool.var <- diffs.df.2$pool.sd^2
+rma(yi = difference, vi = pool.var, data = diffs.df.2,
+    method = "REML")
+```
+
+This gives us an Estiamte of -0.92, which is somewhat more negative difference than -0.83 of the raw mean.
+```{r}
+summary(lm(difference ~ 1, data = means.123.wide))
+```
+
+
+
+## Nested ANOVA
+
+What is average effect of a mutation to abl?
+
+
+Use lmer function from lme4
+```{r}
+lmm.Ho <- lmer(wing.score ~ 1 + (1|allele),
+     data = student123.F)
+
+lmm.Ha <- lmer(wing.score ~ E.or.C + (E.or.C|allele),
+     data = student123.F)
+
+anova(lmm.Ho,
+      lmm.Ha)
+
+summary(lmm.Ha)
+
+ranef(lmm.Ha)
+
+fixef(lmm.Ha)[2] + ranef(lmm.Ha)$`allele`[,2]
+```
+
+
+
+
+
+```{r}
+summary(lmm.Ha)
+ranef(lmm.Ha)
+```
+
+

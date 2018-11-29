@@ -1,0 +1,144 @@
+---
+title: "a) Introduction to shroom"
+author: "Nathan Brouwer"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+## The deep shroom analysis issues
+
+[not yet edited]
+
+
+
+
+
+
+After having spent way too much time navel-gazing about the fly data and how to make best use of it I've decided to propose 2 complementary types of questions for students to address.  First, I have a small set of biological questions to chose from.  Second, I have a number of statistical questions related to how this type of data set can be analyzed.  Each student will pick one of the biological questions (or potentially propose their own) and one of the statistical questions, then decide whether to address the question using all of the data or a subset of the data, with this decision potentially impacting how the data are worked with.  Students will then set up the data as needed using dplyr functions like filter(), carry out the analyses, and write a paper discussing the biological results and if the statistical issues they looked in to impact those results.  
+
+Below is an outline of the biological and statistical questions.  After that are more details.
+
+
+## Outline
+
+### Biological questions:
+
+Students will pick one question, or develop their own.  Different biological foci might impact how the data are analyse and the types of statistical questions that can be investigated or the subset of the data used. 
+
+* What is the impact of maleness?
+* What is the impact of each of the 18 mutant candidate alleles?
+* What is the impact of the 6 candidate genes?
+
+### Statistical questions:
+
+
+* How does "pooling" the data from all of the students impact the results? 
+* How do different approaches to correcting for multiple comparisons impact the results?
+* Can we use the technique known as "equivalence tests" to determine if any alleles are genes truly have no mean effect?  (That is, *accept* the null hypothesis)
+* Does the use of different types of **effect sizes** impact the results?
+* What is the impact of different approaches to **weighting** the results of crosses with different sample sizes?
+* What is the impact assuming normality and using t-tests versus using non-parametric methods that respect the ordinal nature of the data?
+
+## How much data to use?
+
+* Data from all 14 lab sections combined
+* Data from just one lab section
+* Data for just a single gene
+
+
+
+
+
+## Details
+
+### Biological questions:
+
+#### What is the impact of maleness?
+
+In this class we work with flies that have been engineered to overexpress shroom.  This is done by inserting an extra copy of shroom on the X-chromosome.  Flies therefore have their normal autosomal copy (on chromosome 3 I believe) and an extra copy linked to molecular switch that allows us to turn in on in specific tissues during development, such as the wing or eye.  
+
+Male fruit flies are XY and typically have higher levels of Shroom over expression due to the process of **dosage compensation.**  Our fly dataset can be used to investigate how dosage compensation varies between strains of flies with different genomic backgrounds.  To address this question, you could look at just "control" flies and determine if males always a different from females to the same degree, or if there is variation among the genes or allele.s
+
+**References**:
+
+Jaffe and Laird.  1986.  Dosage compensation in Drosophila.  Trends IN Genetics.
+
+Mank, J.  2009.  The W, X, Y and Z of sex-chromosome
+dosage compensation.  Trend in Ecology & Evolution
+
+<br>
+
+#### What is the impact of each of the 18 mutant candidate alleles?
+
+This study involves 6 genes and 3 alleles of each gene.  Which allele shows the strongest impact on the fly phenotype?  Is there one allele that stands out from all the rest, or are there several alleles tied for the "best" candidate?  Are there any alleles for which we should conclude that there is no effects (that is, accept the null?).
+
+
+#### What is the impact of the 6 candidate genes?
+
+Instead of focusing on each seperate allele, we can focus on the 6 genes.  By (more or less) averaging the effect of all three alleles we can determine how strong and consistent the effect of a mutation in that gene is.  In some cases, two alleles might have a negative effect on a phenotypic score, while the third might have the opposite effect, increasing the score.  Should we conclude that there is a negative effect, or does the one positive effect cancel out the two negative ones?
+
+
+### Statistical questions:
+
+#### How does "pooling" the data from all of the students impact the results? 
+
+We ask the students in the class to focus mostly on the data they generate themselves.  We also ask them to consider the data from the entire class and compare their results to the class average.  For the whole-class dataset, we pool all the data together, essentially treating the data as if they were collected by a single student.  We are assuming that the biggest source of variation in the data is due to the effect of the mutant alleles, and that variation in how students score the flies isn't important.  Statistically, this is wrong, but how much does it impact our results?  **Do any conclusions change between a correct analysis of the data which recognizes the "nested" nature of the data and an naive analysis the acts as a single student scored all the flies?**
+
+
+#### How do different approaches to correcting for multiple comparisons impact the results?
+
+We are looking at 6 genes and 18 alleles, with the goal of selecting strong candidates for future analysis.  However, we know from thinking about multiple comparisons that we could end up with **false positives** just due to chance.  We can correct for this using a number of methods.  Traditionally, biologists have used the **Bonferoni** method because it is really simple to do.  The Bonferoni approach, however, can impose a stiff penalty and reduce power, and you can end up getting "Bonferonied into oblivion" (TL Ashman, 2009).  Some ecologists have been fed up with this said we should not bother with comparisons for multiple comparisons (Moran 2003).  Epidemiologists have also voiced opinions like this; I'm sure in all disciplines you'll find multiple comparisons backlash.  In the 1990s some modifications to Bonferoni started to be used, such as the Holm and Hochberg methods.  These are bit harder to do by hand (though R can do them very easily).  In the last 10 years, the **False Discovery Rate** (FDR) has become very popular in some fields, and some people in biology have said it should be used rather than other methods (Pike 2011).  **How do the results of the study vary between different approaches to multiple comparisons?  Do we benefit from using the FDR?  Do things even change using Bonferonni?**
+
+**References** 
+Moran, MD.  2003.  Arguments for rejecting the sequential Bonferroni in ecological studies.  Oikos.
+
+Pike 2011.  Using false discovery rates for multiple comparisons in ecology and evolution  Methods in E & E.
+
+
+#### Can we use the technique known as "equivalence tests" to determine if any alleles are genes truly have no mean effect?  (That is, *accept* the null hypothesis)
+
+The logic of p-values doesn't allow us to ever accept a null hypothesis, no matter how large the p-value.  Recently, the technique of **equvilance testing** is becoming more popular (Motulsky 2018).  Its argued that equivalence testing allows us to conclude that the null hypothesis is indeed true.  **If we use equivalence testing, can we conclude that any genes or alleles truly have no impact and can be confidently ignored in future studies?**
+
+**References**
+
+Motulsky.  Chapter 21: Testing for equivalence or noninferiority.
+
+
+#### Does the use of different types of **effect sizes** impact the results?
+
+The data produced by this study are very complicated.  One way of making this simpler is to summarize the data produced by each student and calculate an effect size statistics for the difference between the students experimental and control flies.  These effect sizes can then be used as the raw data for further analysis.
+
+For example, if want to analyze the raw data we have to account for the fact that all flies scored by the same student are correlated with each other because each student will have a slightly different internal calibration to the score system.  We can therefore say that our data has a hierarchical or nested structure, with each student acting as a node in the hierarchy, and each fly being "nested" within the node of the student which scored it.  We have 250 students and about 3000 female flies.  We therefore have 3000 raw data points, but these data points are clustered into 250 groups.  If we take each student's data and turn it into effect sizes, we collapse this large dataset down into just 250 data points, one for each student (assuming we are just looking at one sex).  This makes our analyses much simpler and cleaner.
+
+Converting the data from each student into an effect size  creates a situation that is similar to a **meta-analysis** (Motulsky 2018).  Meta-analysis is a way to summarize data from multiple independent studies.  It was first used to summarize medical studies and has become popular in the last 25 years in ecology.  Recently, meta-analysis has been used to address debates in lab-based biology (Nature 2016; Dent et al 2016).
+
+The simplest effect sizes is just the difference between the means (**mean difference**) of the experimental and control flies from a single student.  An alternative that accounts for the variation in each group of flies is an effect size like **Cohen's D**, which is a **Standardized mean difference** (SMD).  Cohen's D, however, is rooted in assumptions about normality, and our data is definitely not normal!  An alternative that might be better is the **log response ratio** (log(mean1/mean2)).  **If we take a meta-analytic approach, does the type of effect size impact the results**?
+
+**References**
+Motulsky, 2018.  Chapter 43: Meta-analysis.
+
+
+
+#### What is the impact of different approaches to **weighting** the results of crosses with different sample sizes?
+
+The simplest form of meta-analysis calculated an effect size and uses it as raw data for subsequent analysis.  This is easy, but ignores differences in the standard deviation, standard errors, and sample size between the data produced by different students; aberrant results from small sample sizes could potentially through off the results.  These differences can be accommodated by providing different **weights** to studies depending on how precise they have estimated their means or how large their sample size.  Traditionally, weights have been set as 1/SD for each study.  Studies with small standard deviations (SD) therefore have larger weights and have more influence over the results.  Recently, evidence has been accumulating that using sample sizes for weights is better.  **Does the type of weights used impact our results?**.
+
+
+
+#### What is the impact assuming normality and using t-tests versus using non-parametric methods that respect the ordinal nature of the data?
+
+These data are inherently non-normal.  It is much easier to treat them as non-normal and just use t-tests.  Rank-based methods are arguable more important, but does it matter.  **Does using t-tests instead of rank-bsed methods impact our results**
+

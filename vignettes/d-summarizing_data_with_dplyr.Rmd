@@ -1,0 +1,181 @@
+---
+title: "d) Summarizing data with dplyr"
+author: "Nathan Brouwer"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+
+## Introduction
+
+This tutorial will demonstrate how to use dplyr's summarize() command to calculate summary statistics such as the mean, standard deviation (SD) and sample size (n).  First we'll process a dataset of female fruit flies to determine summary stats on their wing phenotype (mean, SD etc.).  We'll use the group_by() command to split the data up by the experimental groups the flies were in.  Then we'll look at a larger dataset with both male and female flies in the two experimental groups and extend the use of the group_by() function to split larger datasets up with multiple grouping variables: sex (male vs. female) and experimental group (control vs. experimental.
+
+## Preliminaries
+
+### Load libraries
+
+Any libraries not already downloaded can be loaded using the code "install.packages(...)", such as "install.packages('plotrix)".
+
+```{r}
+library(shroom)  #data
+library(dplyr)   #summarize() and groub_by()
+library(plotrix) #function for SE
+```
+
+
+### Load data
+
+The wingscores_s1F dataset has data for the 24 female flies examined by the 1st student in the dataset ("_s1F"). The "wingscores_s1" dataset has all of the 1st students data.  We'll look at both over the course of this tutorial.
+
+```{r}
+data("wingscores_s1F")
+data("wingscores_s1")
+```
+
+
+
+## Numeric summaries with summarize()
+
+We can calculate the mean of a column using summarize with the mean() command within it.  Note that the format is "summary.name = function(data.column)".  "mean =" generates the label for the summary and "mean(wing.score)" is the summary command.
+
+```{r}
+wingscores_s1F %>% 
+  summarize(mean = mean(wing.score))
+```
+
+
+summarize() is most powerful when you want multiple summary statistics worked up for the same set of data.  We can ask for both the mean and the standard deviation (SD) like this:
+```{r}
+wingscores_s1F %>% 
+  summarize(mean = mean(wing.score),
+            SD = sd(wing.score))
+```
+
+A handy function is **n()** which counts up the sample size.  Note that nothing goes in n()
+
+```{r}
+wingscores_s1F %>% 
+  summarize(mean = mean(wing.score),
+            SD = sd(wing.score),
+            n = n())
+```
+
+
+## Numeric summaries by group
+
+**group_by()** splits the dataframe up by a categorical (aka factor) variable.  Here, I split by the 2 experimental conditions: E = "experimental" flies and C = "control" flies and the calculate the summary stats.
+
+```{r}
+wingscores_s1F %>%                   # data
+  group_by(E.or.C) %>%               # group_by()
+  summarize(mean = mean(wing.score), # summarize()
+            n = n(),
+            sd = sd(wing.score))
+```
+
+
+## Cool summarize() tricks
+
+Here are some demonstrations of the functionality of summarize().
+
+### Using summary functions from other packages
+
+I can also use functions from other packages.  The **plotrix** package has a standard error function: **std.error()**.  I'll call it using plotrix::std.error() so its obvious that its from that package.
+
+I can use this std.error() function within summarize()
+```{r}
+wingscores_s1F %>% 
+  group_by(E.or.C) %>% 
+  summarize(mean = mean(wing.score),
+            n = n(),
+            sd = sd(wing.score),
+            se = plotrix::std.error(wing.score))
+```
+
+
+### Doing math within summarize()
+
+I can even do math *within* summarize. Here, I calculate an approximate 95% confidence interval using std.error() by multiplying it within summarize() on the fly.
+
+```{r}
+wingscores_s1F %>% 
+  group_by(E.or.C) %>% 
+  summarize(mean = mean(wing.score),
+            n = n(),
+            sd = sd(wing.score),
+            se = plotrix::std.error(wing.score),
+            CI95 = 1.96*plotrix::std.error(wing.score))
+```
+
+
+### Saving summarize() output to an R object.
+
+I can save this summary table to an object if I want
+
+```{r}
+s1_females_summary <- wingscores_s1F %>% 
+  group_by(E.or.C) %>% 
+  summarize(mean = mean(wing.score),
+            n = n(),
+            sd = sd(wing.score),
+            se = plotrix::std.error(wing.score),
+            CI95 = 1.96*plotrix::std.error(wing.score))
+```
+
+
+And call it up later
+```{r}
+s1_females_summary
+```
+
+I can even save this to a .csv file
+
+```{r, eval = F}
+write.csv(s1_females_summary, file = "s1_summary.csv")
+```
+
+
+## Numeric summaries by multiple groups
+
+You can give group_by() multiple categories.  The "wingscores_s1" data has both males and females from both experimental conditions.  TO make the cod cleaner I'll make a vector called "columns." that will store the 3 names of the columns I want to work with.
+
+```{r}
+#names of columns to examine
+columns. <- c("E.or.C", "sex","wing.score")
+
+# check that everything works
+summary(wingscores_s1[,columns.])
+```
+
+
+Calculate the mean for both sexes and for both experimental conditions.
+```{r}
+wingscores_s1 %>% 
+  group_by(E.or.C,
+           sex) %>% 
+  summarize(mean = mean(wing.score))
+```
+
+
+
+```{r}
+
+```
+
+
+            

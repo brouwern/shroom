@@ -1,19 +1,30 @@
 ---
-title: "Loading the shroom package"
+title: "b) Loading the shroom package"
 author: "Nathan Brouwer"
-date: "November 12, 2018"
-output: html_document
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
   chunk_output_type: console
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
 ```
 
+## Introduction
 
+This tutorial walkthroughs how to get the *shroom* package up and running on your computer.
 
-## Loading devtools
+## Preliminaires
+
+### Loading devtools
 
 If you haven't already, downloaded the **devtools** package (This isn't necessary if you have downloaded it recently )
 
@@ -29,7 +40,7 @@ library(devtools)
 ```
 
 
-## Loading shroom
+### Loading shroom
 
 If you haven't done so recently, download the **shroom** package from github.  (The function is install_github() but what it really is doing is copying the files from GitHub to your computer).
 ```{r, eval = FALSE}
@@ -38,14 +49,16 @@ devtools::install_github("brouwern/shroom")
 
 
 Load **shroom** into your current R session using library()
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 library(shroom)
 ```
 
 
+
+
 ## Looking at shroom data
 
-You can check to see if it worked by loading a dataset
+You can check to see if setting up the package and its data worked by loading a dataset
 
 ```{r}
 data("wingscores")
@@ -60,5 +73,11 @@ and plot it
 
 ```{r}
 hist(wingscores$wing.score)
+```
+
+
+
+```{r}
+
 ```
 

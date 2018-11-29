@@ -1,0 +1,471 @@
+---
+title: "e) Calculating effect sizes using the metafor package"
+author: "Nathan Brouwer"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+## Introduction 
+
+In order to do a **meta-analysis** or meta-analysis type work up of a data set we need to calculate **effect sizes**.  The **metafor** package ([Viechtbauer 2010](https://www.jstatsoft.org/article/view/v036i03)) is probably the most popular R package for meta-analysis among biologist and can be used to calculate effect sizes, as well a carry out meta analyses.
+
+Effect sizes are usually based on 2 quantities
+
+1. The mean of 2 groups, such as control and experimentally treated organisms.
+1. The standard deviation (SD) of the 2 groups.
+
+The means and SDs of each group for a single study are then converted into an effects size, such as **Cohen's d** or a **response ratio**, which summarizes the difference between the 2 treatments.  Effect sizes can be useful for presenting the results for a single study in a currency that can be compared to other studies, and effect sizes from multiple studies can be combined into a meta-analysis.
+
+In this tutorial we'll calculate the necessary summary statistics using dplyr, and then effect sizes using metafor.  We'll calculate effect sizes for each of the 18 alleles investigated by a single section of the Neuro Defects lab.
+
+## Preliminaries
+
+### Load packages
+
+```{r}
+library(shroom)
+library(metafor)
+
+library(dplyr)
+library(tidyr)
+library(data.table)
+```
+
+### Load shroom data
+
+```{r}
+data("wngscrs_sxn1")
+```
+
+This is a somewhat large set of data
+```{r}
+dim(wngscrs_sxn1)
+```
+
+
+We can get a glimpse of the data using the table() command
+```{r}
+with(wngscrs_sxn1, 
+     table(gene.allele, 
+           gene.shrt))
+```
+
+
+## Summarizing data by group
+
+To use metafor to calculate effect sizes, you must first have means and SDs.  For a single study, you might have single effect size summarize the difference between experimental and control treatments.  When you are doing a meta analysis, you work up an effect size for each experiment; usually you extract summary stats from the published paper.  In contrast, we are working with raw data from a multi-layered study, and we'll be treating data from each student like a mini-study and then compare effect sizes across students within the same lab section like a meta-analysis.
+
+
+Summary stats for our raw fly wing data can easily be worked up with dplyr's group_by() and summarize() commands.  In the following code we'll summarize data for the 18 alleles in this lab section.  We pass 3 things to group_by: the experimental group (E or C), the allele designation ("gene.allele") and the allele name ("allele").  "gene.allele" and "allele" contain redundant information; "allele" is the precise name of the mutated gene (eg "abl[2]") while "gene.allele" is just the name of the gene and a numeric code (1, 2 or 3) indicating the order which the alleles are organized in the dataset.  This will help use with organization later.
+
+We also include "student.ID" to further distinguish the seperate datasets (each student works on a single allele).
+```{r}
+sxn1_summary <- wngscrs_sxn1 %>% 
+  group_by(E.or.C,
+           gene.allele,
+           allele, 
+           student.ID) %>% 
+  summarize(mean = mean(wing.score),
+            sd = sd(wing.score),
+            n = n())
+```
+
+We can look at the output; note that because dplyr creates "tibble" objects R only prints out a selection of columns.
+```{r}
+sxn1_summary
+```
+
+
+
+
+## Calculate effect sizes 
+
+metafor has a function, **escalc()**, which returns an effect size when given a mean and standard deviation.  The form that you give data to escalc() depends on how you worked up the data.
+
+We'll first examine a simple case of calculating 1 effect size, then work up all of our data.
+
+### Effect size walk through
+
+Let's first look at a simple case: an effect size for a single allele.  I'll find the control and experimental results for the abl[2] allele, which is the 1st of 3 able alleles and so is also referred to as "abl.1".
+
+
+1st I'll find the indices of the 2 desired rows of data.  This requires the which() command.  This code asks "which rows in the gene.allele column of the sxn1_summary dataframe contain the string 'abl.1'." (I could also use the dplyr filter command here too)
+```{r}
+i.able.1 <- which(sxn1_summary$gene.allele == "abl.1")
+```
+
+I can pull out using that index using square brackets.
+```{r}
+abl.1 <- sxn1_summary[i.able.1, ]
+```
+
+So I know have a 2-row summary table of just abl.1 for the control (C) and experimental (E) groups.
+
+```{r}
+abl.1
+```
+
+
+A  Cohen's d effect size for the impact of the experimental treatment on fly wing phenotype would be calculated as:
+
+(mean.1 - mean.2)/("pooled" SD)
+
+where the **pooled SD** is a **weighted average** the the 2 standard deviations.
+
+metafor's escalc() function luckily calculates the pooled SD for us, so we just have to give it the 2 means, the 2 SDs, and 2 two sample sizes.
+
+I can isolate the means from the abl.1 summary table like this using square brackets [ ]
+
+```{r}
+#1st row 
+mean.C <- abl.1$mean[1]
+
+#2nd row
+mean.E <- abl.1$mean[2]
+```
+
+And similarly the SDs and Ns like this
+```{r}
+# standard deviations
+sd.C <- abl.1$sd[1]
+sd.E <- abl.1$sd[2]
+
+#sampel sizes
+n.C <- abl.1$n[1]
+n.E <- abl.1$n[2]
+```
+
+I can then pass this information to escalc().  I also have to specify a "measure", which is the name of an particular flavor of effect size.  I'll ask for the **"SMD"**, which is the **"standardized mean difference"**, which is a more generic name for Cohen's d (actually an updated version called **Hedge's g**).
+
+escalc has some somewhat cryptic arguments
+
+* means: m1i and m2i
+* SDs: sd1i and sd2i
+* sample size (n): n1i and n2i
+* effect size: measure
+
+```{r}
+metafor::escalc(m1i = mean.C, m2i = mean.E, 
+                sd1i = sd.C, sd2i = sd.E,
+                n1i = n.C, n2i = n.E,
+                measure = "SMD")
+```
+
+esclac() returns 2 things: "yi" and "vi".  yi is the effect size, and vi is the **variance** for the effects size.  This variance value is used indicate how precisely the effect size was estimate, allowing calculation of standard errors and confidence intervals for a single effect size, and indicating how much influence ("weight") a single effect size should have on a meta-analysis..
+
+There are *many* flavors of effect sizes.  One popular in ecology is the **"log response ratio"** ([Hedges et al 1999](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1890/0012-9658%281999%29080%5B1150%3ATMAORR%5D2.0.CO%3B2)), which is calculated as 
+
+log response ratio = log(mean.1/mean.2).  
+
+To get it, we use measure = "ROM", where ROM = **"ratio of means"** (the log is implied).  As best I can tell, the ROM was first used in ecology and independently was developed in medicine.  
+ 
+ 
+```{r}
+metafor::escalc(m1i = mean.C, m2i = mean.E, 
+                sd1i = sd.C, sd2i = sd.E,
+                n1i = n.C, n2i = n.E,
+                measure = "ROM")
+```
+
+We can check escalc's math if we want.  The ratio of our means is just
+
+```{r}
+mean.C/mean.E
+```
+
+And the log of the ratio is
+```{r}
+log(mean.C/mean.E)
+
+```
+
+Due to the unique properties of how data work, the variance (vi) for a difference between 2 means (aka standardized difference between means, MSD) is calculated using a weighted average, while the variance for a ratio of 2 means (ROM) has a very different formula.
+
+
+## Multiple effect sizes: escalc formula notation 
+
+escalc() can also work with a **formula notation** similar to how the lm() function works.  The notation is a bit complex though.  This notation is very useful for when you have data summarized in "long" format from dplyr, so its worth the effort to see how it works.
+
+escalc's formula notation has these features:
+
+* Left-hand side of formula: "mean/sd" for the effect size
+* Right-hand side of formula: "~ grouping.var | study.var", where "grouping.var" is a categorical variable that distinguishes the 2 treatments within a study or experiment, and "| study.var" is a categorical variable that distinguishes between different studies, experiments, or datasets.  
+    + In our data, the grouping variable is "E.or.C", for the Experimental or Control treatment, and the study variable is "student.ID", which distinguishes the seperate datasets generated by each students, which we are treating like unique experiments for our quasi-meta analysis.
+* The sample size is indicated by "weights = n"
+* The dataset being used, set by "data = ..."
+* The effect size to be used, set by "measure = ..."
+
+"student.ID" is a numeric variable.  In the code below we wrap it in factor() to convert it to a categorical variable.  We could also set it to a factor in the dataframe like this
+
+```{r}
+sxn1_summary$student.ID <- factor(sxn1_summary$student.ID)
+```
+
+
+### escalc formula notation demonstration
+
+Let's re-calculate the effect size for the 1st *able* allele. Note that for the dataset I am using the summary dataset we made of just the able 1 allele, which has only 2 rows
+
+```{r, echo = F}
+abl.1
+```
+
+
+Now let's get our effect size using formula notation.  Again, on the left side of the equation is mean/sd, and the right side is a funky notation using a vertical bar.  We also give it weights, the effect size measure and the data.
+```{r}
+escalc(mean/sd ~ E.or.C | factor(student.ID),
+       weights = n,
+       measure = "SMD", 
+       data = abl.1)
+```
+
+
+This should be the same result as our previous way of using escalc()
+
+```{r}
+escalc(m1i = mean.C, m2i = mean.E, 
+                sd1i = sd.C, sd2i = sd.E,
+                n1i = n.C, n2i = n.E,
+                measure = "SMD")
+```
+
+### escalc formula notation application
+
+So far we've focused on the results of data collected on a single allele of the able gene by a single student.  Now let's use the full dataset, sxn1_summary, which has data on all 18 alleles for a single class.  The only difference is the dataset I'm using (data = sxn1_summary) and I've added "var.names =..." to give the output informative column labels.
+
+
+
+```{r}
+sx1n1_SMD <- escalc(mean/sd ~ E.or.C | factor(student.ID),
+       weights = n,
+       measure = "SMD", 
+       data = sxn1_summary,
+       var.names = c("effect.size.SMD",
+                     "var.SMD"),
+       append = T)
+       
+```
+
+
+
+
+We now get a dataframe with 18.  The top row should match our previous calculations.  Let's use the head() command to just look at the 1st few rows.
+```{r}
+head(sx1n1_SMD)
+```
+
+
+escalc gives us the variance for the effects size.  We can get the confidence intervals using summary()
+```{r}
+sx1n1_SMD_summary <- summary(sx1n1_SMD)
+```
+
+
+Look at the output
+```{r}
+head(sx1n1_SMD_summary)
+```
+
+A major drawback of escalc formula notation is that it that labels for the effect sizes aren't returned!
+
+It looks like escalc alphabetizes things so we should be able to match up the names.  To make sure we know what's doing on we'll keep track of the group means to double check things.
+
+To do this we need to reshape our data.  Right now, our sxn1_summary dataframe has a seperate row for the control and experimental mean for each allele; this means there are 36 rows (18 alleles x 2 experimental groups)
+
+```{r}
+head(sxn1_summary)
+dim(sxn1_summary)
+```
+
+
+Our table of effect sizes, however, combines the row for the Control group and the row for the experimental group into a single effect size, and so has just 18 rows.
+
+```{r}
+sx1n1_SMD
+```
+
+
+So what we need to do is reshape our 36-row sxn1_summary dataframe into an 18 row dataframe with the a seperate column for each mean.  
+
+```{r, eval = F, echo = F}
+## deprecated use of tidyr::spread
+# To do this we can use a function from the tidyr package #called spread.  This turns "long" data with 36 rows into #slightly "wider" data with 18 rows.  The syntax for spread #is kind of tricky.  We give is a "key" column, which has a #categorical variable which we want to have split up into #seperate columns.  We also give it a "value" column which #contains values that will be allocated between the 2 new #columns.
+
+cols.to.use <- c("gene.allele","allele","E.or.C","mean")
+
+wide. <- tidyr::spread(data = sxn1_summary[,cols.to.use],
+       key = "E.or.C", 
+       value = "mean")
+
+head(wide.)
+dim(wide.)
+```
+
+
+
+To do this reshaping we'll use a cool function from the **data.table** package called **dcast** (actually dcast.data.table).  "Casting" is an older approach to data reshaping the predates the **tidyverse** of packages.  As best I can tell, the **dcast.data.table** is the best tool for what we need to do.  This following code is a bit complicated and not yet fully annotated, sorry.
+
+
+**dcast** stands for "data.frame cast" and to the best of my knowledge originated from the reshape2 package.  reshape2 used the verbs **melt** and **cast** to describe reshaping data.  reshape2 seems to have been largely been replaced by dplyr and tidyr, which use **gather** and **spread**.  I like **dcast** syntax and logic better, and as best I can tell **dcast.data.table** does some things that **spread** can't, though this may just be my ignorance of the full power of the tidyverse.  
+
+
+**dcast.data.table** (and **dcast** before it) use a **formula interface** to express how to manipulate data.  Its a bit hard to describe the logic behind it.  Basically, in the formula below I am using gene.allele (which has values like "able.1") and allele (eg "able") as ID variable columns, and the column E.or.C, which contains the values "E" or "C" for the experimental groups, defines a new column (or in this case column)
+```{r}
+my.cast.formula <- formula(gene.allele + allele ~ E.or.C)
+
+```
+
+dcast.data.table works on data.table objects, not data.frames or tibbles, so I need to convert my effect size summary object sxn1_summary, which is a tibble, to a data.frame object.
+```{r}
+#what is sxn1_summary?
+is(sxn1_summary)[2]
+
+#convert to data.table
+sxn1_summary_dt <- data.table(sxn1_summary)
+
+#wht is new object?
+is(sxn1_summary_dt)[1]
+```
+
+
+dcast.data.table also takes an an argument value.var ("Value variables"), which are the columns that I want to be split up into new columns.  This will be my columns for means,SDs, and sample size (n).  Right now there are one columns for each of these, with values for controls ("C") and experimental ("E") within the same column.  dcast.data.table will take each of these columns and reshape it from 3 columns to 6.  So instead of a single mean column, I"ll have control-mean and experimental mean, control-sd and experimental-sd, etc.
+
+I'll but my value variables into a vector
+
+```{r}
+my.vars <- c("mean","sd","n")
+```
+
+Finally the magic
+```{r}
+sxn1_wide <- dcast.data.table(data = sxn1_summary_dt,
+                 formula = my.cast.formula,
+                 value.var = my.vars)
+```
+
+
+
+I'll us as.tbl() to convert it to a tibble so we can see what it looks like
+```{r}
+sxn1_wide <- as.tbl(sxn1_wide)
+
+dim(sxn1_wide)
+head(sxn1_wide)
+```
+
+The dataframe is 18 rows by 8 columns, with columns names including mean_C, mean_E,sd_C,sd_E and n_C.
+
+Compare this to the starting "long" dataframe.
+```{r}
+dim(sxn1_summary)
+head(sxn1_summary)
+```
+
+This is 36 rows tall.
+
+
+Now that we have our data in wide format we can calculate the difference between means by hand.  I'll call this mean.diff.
+
+```{r}
+sxn1_wide$effect.size.MD <- sxn1_wide$mean_C - sxn1_wide$mean_E
+```
+
+
+I'll re-do my effect size calculations using measure = "MD" instead of RMD so I can compare things easily to my hand calculation of the mean difference (effect.size.MD)
+
+```{r}
+sx1n1_MD <- escalc(mean/sd ~ E.or.C | factor(student.ID),
+       weights = n,
+       measure = "MD", 
+       data = sxn1_summary,
+       var.names = c("effect.size.MD",
+                     "MD.var"),
+       append = T)
+       
+```
+
+
+
+Again, the whole point of this is to try to figure out how escalc organizes its output, and to associate the correct allele and gene names with its output.  My table sxn1_wide that I made with the dcast.data.table function has these keys variables: gene names, allele names, means by group (E and C) and SDs by group.
+```{r}
+names(sxn1_wide)
+```
+
+
+dcast.data.table automatically organizes its output alphabetically and numerically, so abl.1 is first, abl.2 is second, abl.3 is third, and dia.1 is forth.
+```{r}
+head(sxn1_wide)
+```
+
+In contrast, the object sx1n1_MD that I just now with escalc only has effect sizes and effect size variances.
+```{r}
+names(sx1n1_MD)
+```
+
+I believe that escalc is organizing things alphabetically.  If that's true, then the effect sizes in the escalc object sx1n1_MD should match those I calculated by hand in the  sxn1_wide object.  I can test this by plotting them against each other.
+
+```{r}
+plot(sxn1_wide$effect.size.MD, 
+     sx1n1_MD$effect.size.MD)
+```
+
+Perfect!
+
+
+I can now feel safe adding labels from sxn1_wide to sx1n1_SMD, which has the standardized mean difference (= COhen's d, or more accurately Hedges g) I am interested in.
+
+Because R is picky I have to use data.frame to make both of these objects the same class (for fun see the obtuse error message it gives you if you take data.frame out of the code below)
+```{r}
+sx1n1 <- cbind(data.frame(sxn1_wide),
+               data.frame(sx1n1_SMD))
+```
+
+
+Now, after all our hard work, let's see what we have
+
+```{r}
+names(sx1n1)
+head(sx1n1)
+```
+
+
+
+## Plotting effect size
+
+A quick way to plot effect sizes is to use the forest() function in metafor.  I'm not super excited about its output, but it quickly gives you a visualization.  It takes the arguments
+
+* x: the effect sizes
+* vi: the variances for the effect sizes
+* slab: labels for effect size (usually study names for a meta-analysis; alleles for our work)
+* xlim: limits of the horizontal axis, which I had to make small to get rid of lots of excess white space
+```{r}
+metafor::forest(x = sx1n1$effect.size.SMD, 
+       vi = sx1n1$var.SMD,
+       slab = sx1n1$gene.allele,
+       annotate = F,
+       xlim = c(-2.75,3.25))
+```
+
+
+
+Recall that we got confidence intervals using summary().  We can feed that into a plot on our own, once we get some time...
+
+```{r}
+
+```
+

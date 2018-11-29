@@ -1,0 +1,197 @@
+---
+title: "f) Analysis of difference scores: thinking about effect sizes, sample sizes & effect size variances"
+author: "Nathan Brouwer"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+## Introduction
+
+A major feature of the Neural Defects class that impacts data analysis is the fact that each student visually scores fly wing to character how "crinkly" the wings are.  Wings are scored using reference photos from 1 (wildtype) to 8 (wing is almost entirely rolled up and looks more like a piece of string than a wing).  
+
+Each student does the scoring on their own while looking at all of their flies.  They are instructured to quasi-rank the flies from different groups.  For example, to look at all of the male flies (controls and experimental flies) and organize them from most crinkly (8-like) to least crinkly.  Each student's data should therefore be internally consisent and represent any difference between the treatments.  However, what one student might scores as a 6 another might score as an 8.
+
+The best way to analyze the wing score data is therefore to treat each student as a data point by 
+
+1. Taking the mean of all of their flies in each group (male controls, female contorls, male experimental, etc), and 
+1. subtracting the mean of their experimental flies from the mean of their control flies for each sex (male control - male experimenta, etc).  
+
+This produces 14 data points for each allele being studied, because there is 1 student studying each allele in each section of the class, and there are 14 sections of the class.  Since there are 14 sections and about 18 students per class we have about 252 data points.
+
+### Differene scores & effect sizes
+
+We'll call the differences between treatments for a single student's **difference scores** to give them a sciencey sounding name.  These difference scores act as an unstandardized **effect size** for each student's sub-study.  (In R's metafor package these would be called "mean differences" and desigated using "MD").
+
+Another effect size included in the data is the **log-response ratio**.  Once your analysis is up and running we'll discuss this more.  (In metafor this is called the "Ratio of mean", or "ROM").
+
+Setting up the data as a difference changes the hypothesis testing framework a little bit.  Normally when you have an experimental group and a control group you use a 2-sample t-test to compare the groups.  The p-value from this test is used to gauge whether the 2 groups are different from each other.  
+
+For these data, we are turning data on 2 groups and changing it into a 1 value: the differene between the groups.  We therefore will test whether this difference is different from zero using 1-sample t-tests.  How these t-tests are exactly formulated depends on the set up of the model, but the math is the same as a 1-sample t-test.
+
+### Variable sample sizes & precision of effect sizes
+
+One additional wrinkle of this data set is that the sample size (N) varies a lot depending on chance and also the allele.  For example, several students had less than 5 male experimental flies, while one had 25 male experimental flies.
+
+The difference scores that comprise this data therefore have widely variable sample sizes.  Each difference score can be thought of as an estimate of the impact of a mutation in the candidate gene on the wing phenotype.  This estimate of the true effect, however, is imprecise due to random variation.  Moreover, small sample sizes exacerbate the impacts of sampling variation.  So, some of our 252 estimates of the impacts of candidate gene mutations are probably pretty representative of the true impacts of the mutations, while others, especially those with small sample sizes, are probably not very good estimates.
+
+If we were just to analyze the difference scores at face value we would be treating each data point as having the same level of precision and the same degree of bias. For many normal scientific situations this is a reasonable assumption.  If we measure the absorbance of 252 samples of protein using the same spectrophotometer, we'd expect each sample to have been measured with the same level of precision and any bias to be the same for all samples.  Our wing data aren't like this because each student could have a different degree of bias and sample sizes vary widely; we should account for this in our analysis.
+
+
+### Pooled standard deviations
+
+The problem of small and unequal sample sizes is a common one, and depending on how the data are formatted and the study goals different approaches can be used.  Our difference scores are a type of **effect size** - the simplest kind, just the difference between 2 means.  Just as we can take a mean of each student's data, we can also take the standard deviation (SD) of the data.  For our effect size, we subtract control from experimental flies to get single number that characterizes the outcome of the study.  For the standard deviation, we get a single value the characterizes the study by calcualting the **pooled standard deviation**.  This is a combination of the 2 standard deviations (to be specific, a [weighted mean](https://en.wikipedia.org/wiki/Weighted_arithmetic_mean) of the 2 SDs).
+
+[Pooled variances](https://en.wikipedia.org/wiki/Pooled_variance) and [pooled standard deviations](https://support.minitab.com/en-us/minitab/18/help-and-how-to/statistics/basic-statistics/supporting-topics/data-concepts/what-is-the-pooled-standard-deviation/) are common in statistical calculations, but usually we don't think about them because the math is taken care of by the computer.  With effect sizes its important that we think more explicitly about it because each effect size has its own associated poole standard devaition.
+
+
+
+### Weighted regression
+
+Once we have a difference score and a pooled standard deviation, we can do something called **weighted regression**.  Meta-analysis is a type of weighted regression.  Analyses which integrate phylogentic information are another form.  Weighted regression is like standard t-tests, ANOVA, and regression, except that it gives data estimated with higher precision (smaller SD) more  influence in the analysis.  To facilitate analysis I have already calcualted the pooled standard deviaiton for you in some version of the data.  
+
+(Another way to do weighted regression is to use the sample size to set the weights.  Methods to do this have been established when using the log response ratio (aka ratio of means "ROM") as an effect size.)
+
+
+
+
+
+I forget why what follows is in this particular file; I will leave it in until I remember what I want to do wiht it : )
+
+
+
+
+### Student vs. fly-level data
+
+Because these data result from summarizing the work done by each student, I will refer to it as **student-level data**.  In contrast, the raw data generated by the student is **fly-level** data because each data point represents a single fly.
+
+
+
+### Key issues
+
+The primary question: which alleles of which genes produce the biggest effect?  Everyone working with these data should evaluate this.  There are a number additinaly issues with how to analyze the data that 
+
+Since these data are uniquely structured
+
+1. **Which effect size is best?**:  The default approach for the analysis of this data is to take the difference between the mean of each student's personal dataset and then average accross the all of the students.  This **difference between means** or **difference score** is a type of **unstandardized effect size.**  It is easy to calcualte and understand.  However, using a difference score ignores differences in sample size between each student's personal dataset.  One
+1. What type of **multiple comparisons correction** should be used?
+1.  **Should data be weighted?**
+1.  Parametic versus non-paranetric analyses
+
+
+1. Compare the effects of different approaches to multiple comparisons correction: None, Bonferroni, Holm, and the false discovery rate (FDR).  You can pick any effect size you want (difference of means, Cohen's D, log reponse ratio) and any set of weights appropriate for that measure (eg, for difference in means you could use no weights, standard deviations, or sample size).
+1. 
+
+
+## Analysis
+
+### Difference scores w/ pooled SD weights
+
+these notes not complted
+```{r, eval = F}
+m.diffs <- lm(diff ~ -1 + gene.allele, 
+           data = data_summ)
+
+m.diffs.wt <- lm(diff ~ -1 + gene.allele,
+                  weights = 1/sd.pool, 
+           data = data_summ)
+
+plot(coef(m.diffs),
+coef(m.diffs.wt))
+
+diffs.mod.tab <- data.frame(summary(m.diffs.wt)$coefficients)
+
+names(diffs.mod.tab) <- c("estimate","SE","t","P")
+```
+
+
+
+### Compare p-valuve corrections
+
+```{r eval = F}
+y <- data.frame(gene = row.names(diffs.mod.tab),
+      bonf.y = round(p.adjust(mod.tab$P,
+               method = "bonferroni"),4)
+
+,holm.y = round(p.adjust(diffs.mod.tab$P,
+               method = "holm"),4)
+
+,fdr.y = round(p.adjust(diffs.mod.tab$P,
+               method = "fdr"),4))
+```
+
+
+
+
+
+### log response Ratios
+```{r eval = F}
+m.log.RR <- lm(log.RR ~ -1 + gene.allele, 
+           data = data_summ)
+
+m.log.RR.wt <- lm(log.RR ~ -1 + gene.allele,
+                  weights = logRR.weight, 
+           data = data_summ)
+
+plot(coef(m.log.RR),
+coef(m.log.RR.wt))
+
+
+
+logRR.mod.tab <- data.frame(summary(m.log.RR.wt)$coefficients)
+
+names(logRR.mod.tab) <- c("estimate","SE","t","P")
+```
+
+
+
+
+```{r eval = F}
+x <- data.frame(gene = row.names(logRR.mod.tab),
+      bonf = round(p.adjust(logRR.mod.tab$P,
+               method = "bonferroni"),4)
+
+,holm = round(p.adjust(logRR.mod.tab$P,
+               method = "holm"),4)
+
+,fdr = round(p.adjust(logRR.mod.tab$P,
+               method = "fdr"),4))
+```
+
+
+
+
+```{r eval = F}
+
+m0 <- lmer(diff ~ sex + factor(temp.C)+ (1|gene.allele),
+           #weights = logRR.weight,
+           data = data_summ)
+
+m1 <- lmer(diff ~ sex*factor(temp.C) + (1|gene.allele), 
+           #weight = logRR.weight,
+           data = data_summ)
+
+anova(m0,m1)
+
+```
+
+
+
+```{r}
+
+```
+
+
+
+

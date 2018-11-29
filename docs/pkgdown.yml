@@ -1,0 +1,19 @@
+pandoc: 1.19.2.1
+pkgdown: 1.1.0
+pkgdown_sha: ~
+articles:
+  a1-introduction: a1-introduction.html
+  a2-intro_to_ind_project_questions: a2-intro_to_ind_project_questions.html
+  b-loading_the_shroom_package: b-loading_the_shroom_package.html
+  c-subsetting_a_dataframe_with_dplyr: c-subsetting_a_dataframe_with_dplyr.html
+  d-summarizing_data_with_dplyr: d-summarizing_data_with_dplyr.html
+  f1-analysis_walkthrough_t_test_and_friends: f1-analysis_walkthrough_t_test_and_friends.html
+  f3-analysis_walkthrough_2-way_ANOVA: f3-analysis_walkthrough_2-way_ANOVA.html
+  f4-analysis_walkthrough_nested_ANOVA: f4-analysis_walkthrough_nested_ANOVA.html
+  g1-calculating_effect_sizes_with_metafor: g1-calculating_effect_sizes_with_metafor.html
+  g2-analysis_of_difference_scores: g2-analysis_of_difference_scores.html
+  s1-stub-probablistic_index_models: s1-stub-probablistic_index_models.html
+  y-creating_a_package: y-creating_a_package.html
+  z-build_and_rebuild_package: z-build_and_rebuild_package.html
+  z2-building_a_package: z2-building_a_package.html
+
