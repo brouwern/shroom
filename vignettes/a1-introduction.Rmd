@@ -1,5 +1,5 @@
 ---
-title: "a) Introduction to the shroom package"
+title: "a1) Introduction to the shroom package"
 author: "Nathan Brouwer"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -18,3 +18,61 @@ knitr::opts_chunk$set(
 ```
 
 Put intro material here : )
+
+
+## Candidate proteins that interact with other proteins/enzygmes
+
+### able
+
+* Tyrosine kinase. 
+  + Phosphorylates other proteins and regualtes their activity (including trio).  
+* activates trio (a GTP exchange factor)
+* Regulates actin architecture
+* Oncogene (BCR-Able)
+  + targeted by Glivec, one of the few targeted molecular medicines
+* Knocking out able on its own results in neural tube defects, similar to knocking out shroom
+
+
+### trio
+
+* GTP Exchange factor (GEF)
+* Trio activates Rho (Rock?)
+  + Rho is a GTPase
+  + Shroom binds Rock, Rock activates myosin
+* regulated by able
+* Trio is upregulated in human cancers; involved in cell adhesion/migration
+
+
+### ssh (slingshot)
+
+* phosphotase
+* activates tws (twinstar) which is an actin depolymerizer
+
+
+
+
+## Candidates which interact directly with actin
+
+### fhos
+
+* Formin
+* regulates actin filaments
+* multiple Fhos genes
+* no known medical implications (yet?)
+
+
+### dia (diaphanous)
+
+* formin
+* Actin polymerizer (actin nucleator)
+* activated by GTPases
+* Human health/biology: inner ear: actin structures with hairs
+
+
+### tws (twinstar)
+
+* actin **de**-polymerizer
+* vertebrates: cofilin
+* might reduce the amount of actin; OR, by createing free ens cause bursts of actin synthesis!
+
+

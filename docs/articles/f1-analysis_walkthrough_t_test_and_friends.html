@@ -57,10 +57,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/a1-introduction.html">a) Introduction to the shroom package</a>
+      <a href="../articles/a1-introduction.html">a1) Introduction to the shroom package</a>
     </li>
     <li>
-      <a href="../articles/a2-intro_to_ind_project_questions.html">a) Introduction to shroom</a>
+      <a href="../articles/a2-intro_to_ind_project_questions.html">a2) Introduction to shroom</a>
     </li>
     <li>
       <a href="../articles/b-loading_the_shroom_package.html">b) Loading the shroom package</a>
@@ -75,13 +75,13 @@
       <a href="../articles/f1-analysis_walkthrough_t_test_and_friends.html">f) Analysis walthrough: t-test and friends</a>
     </li>
     <li>
-      <a href="../articles/f3-analysis_walkthrough_2-way_ANOVA.html">f) Analysis walthrough: 2-way factorial model</a>
+      <a href="../articles/f3-analysis_walkthrough_2-way_ANOVA.html">f3) Analysis walthrough: 2-way factorial ANOVA</a>
     </li>
     <li>
-      <a href="../articles/f4-analysis_walkthrough_nested_ANOVA.html">f) Analysis walthrough: 2-way factorial model</a>
+      <a href="../articles/f4-analysis_walkthrough_nested_ANOVA.html">f4) Analysis walthrough: Nested ANOVA</a>
     </li>
     <li>
-      <a href="../articles/g1-calculating_effect_sizes_with_metafor.html">e) Calculating effect sizes using the metafor package</a>
+      <a href="../articles/g1-calculating_effect_sizes_with_metafor.html">g) Calculating effect sizes using the metafor package</a>
     </li>
     <li>
       <a href="../articles/g2-analysis_of_difference_scores.html">f) Analysis of difference scores: thinking about effect sizes, sample sizes &amp; effect size variances</a>
@@ -121,7 +121,7 @@
 </ol></h1>
                         <h4 class="author">Nathan Brouwer</h4>
             
-            <h4 class="date">2018-11-28</h4>
+            <h4 class="date">2018-12-11</h4>
       
       
       <div class="hidden name"><code>f1-analysis_walkthrough_t_test_and_friends.Rmd</code></div>
@@ -133,15 +133,24 @@
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>This tutorial walks through several types of anlayses that can be done using the shroom package. THe focus will be data on using t-tests and similar methods to compare two groups. In particular</p>
+<p>This tutorial walks through several types of anlayses that can be done using the <em>shroom</em> package. The focus will be on situations that can be analyzed using t-tests and similar methods to compare 2 groups. In particular</p>
 <ul>
-<li>Testing for groups differences using a t-test (t.test</li>
-<li>Cohen’s d effect size for the differene between 2 means (cohen.d)</li>
+<li>Testing for groups differences using a t-test (t.test)</li>
+<li>Cohen’s d effect size for the differene between 2 means (effsizeeffsize:cohen.d)</li>
 <li>Formulating a t-test as a linear model (lm)</li>
 <li>Non-parametric test for ranked data (wilcox.test)</li>
-<li>Non-parametric for skewed rank data (brunner.munzel.test)</li>
+<li>Non-parametric for skewed rank data (lawstat::brunner.munzel.test)</li>
 </ul>
-<p>(TO DO: gls for Welch-type tests; effect size calculations with metafor; effect size for non-parametric tests)</p>
+<div id="to-do" class="section level3">
+<h3 class="hasAnchor">
+<a href="#to-do" class="anchor"></a>TO DO</h3>
+<p>Things not yet implemented</p>
+<ul>
+<li>for Welch-type tests</li>
+<li>effect size calculations with metafor</li>
+<li>effect size for non-parametric tests</li>
+</ul>
+</div>
 </div>
 <div id="preliminaries" class="section level2">
 <h2 class="hasAnchor">
@@ -175,7 +184,7 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt;     intersect, setdiff, setequal, union</span>
 
-<span class="kw">library</span>(car)     <span class="co">#?</span>
+    <span class="kw">library</span>(car)     <span class="co">#?</span>
 <span class="co">#&gt; Loading required package: carData</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Attaching package: 'car'</span>
@@ -183,8 +192,8 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt;     recode</span>
 
-<span class="kw">library</span>(data.tree)<span class="co"># plotting data structure</span>
-<span class="kw">library</span>(treemap)
+    <span class="kw">library</span>(data.tree)<span class="co"># plotting data structure</span>
+    <span class="kw">library</span>(treemap)
 
 <span class="kw">library</span>(plotrix) <span class="co">#std.err function</span>
 
@@ -229,7 +238,7 @@
 <div id="loading-the-data-from-the-shroom-package" class="section level4">
 <h4 class="hasAnchor">
 <a href="#loading-the-data-from-the-shroom-package" class="anchor"></a>Loading the data from the shroom package</h4>
-<p>For a real analysis you need to start from the .csv file with the raw data, data_ind_flies_expt1_2018.csv. This data is included when you download the package. If you search your computer for it you should be able to locate it. It is in a diretory called “extdata” within the directory for shroom package which you downloaded..</p>
+<p>For a real analysis you need to start from the .csv file with the raw data, eg data_ind_flies_expt1_2018.csv if you are working with the 2018 shroom data. This data is included when you download the package. If you search your computer for it you should be able to locate it. It is in a diretory called “extdata” within the directory for the <em>shroom</em> package which you downloaded.</p>
 <ol style="list-style-type: decimal">
 <li>Save the file data_ind_flies_expt1_2018.csv to where you want to do your work for this project</li>
 <li>Set your working directory to the same folder where the file is saved. This can be done through “Session” option of the RStudio menu (this will occur automatically if you are using an R project).</li>

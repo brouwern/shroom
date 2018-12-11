@@ -1,5 +1,5 @@
 ---
-title: "e) Calculating effect sizes using the metafor package"
+title: "g) Calculating effect sizes using the metafor package"
 author: "Nathan Brouwer"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette

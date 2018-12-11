@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 ```
 
 
-THIS TUTORIAL HAS NOT BEEN FULLY SET UP AND PROBABLY MAKES NOT SENSE!!!!!!!!!!!!!
+THIS TUTORIAL HAS NOT BEEN FULLY SET UP AND PROBABLY MAKES NO SENSE!!!!!!!!!!!!!
 
 
 NOTE to self: currently eval = FALSE is SET GLOBABLLY! 

@@ -25,7 +25,13 @@ Imports:
     RCurl,
     GGally,
     broom,
-    ggpubr
+    ggpubr,
+    car,
+    lawstat,
+    effsize,
+    here,
+    metafor,
+    Formula
 Suggests:
     knitr,
     rmarkdown

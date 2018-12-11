@@ -81,7 +81,8 @@ use_package("broom", "Imports")
 ## Setting up data
 
 ```{r}
-file. <- here::here("./inst/extdata","data_ind_fly_wing_scores_2018.csv")
+file. <- here::here("./inst/extdata",
+                    "data_ind_fly_wing_scores_2018.csv")
 
 wingscores <- read.csv(file.)
 use_data(wingscores)

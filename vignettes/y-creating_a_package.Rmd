@@ -84,6 +84,16 @@ use_package("broom", "Imports")
 use_package("arm", "Imports")
 
 devtools::use_package("data.table", "Imports")
+devtools::use_package("car", "Imports")
+devtools::use_package("lawstat", "Imports")
+devtools::use_package("effsize", "Imports")
+devtools::use_package("here", "Imports")
+devtools::use_package("metafor", "Imports")
+devtools::use_package("Formula", "Imports")
+devtools::use_package("data.tree", "Imports")
+
+
+
 
 ```
 

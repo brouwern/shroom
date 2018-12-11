@@ -5,25 +5,20 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>
-<ol start="6" style="list-style-type: lower-alpha">
-<li>Analysis walthrough: 2-way factorial model</li>
-</ol> • shroom</title>
+<title>f3) Analysis walthrough: 2-way factorial ANOVA • shroom</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="&lt;ol start=" style="list-style-type: lower-alpha">
-</head>
-<body>
-<li>Analysis walthrough: 2-way factorial model</li>
-" /&gt;
-
+<script src="../pkgdown.js"></script><meta property="og:title" content="f3) Analysis walthrough: 2-way factorial ANOVA">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]--><div class="container template-article">
+<![endif]-->
+</head>
+<body>
+    <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
@@ -57,10 +52,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/a1-introduction.html">a) Introduction to the shroom package</a>
+      <a href="../articles/a1-introduction.html">a1) Introduction to the shroom package</a>
     </li>
     <li>
-      <a href="../articles/a2-intro_to_ind_project_questions.html">a) Introduction to shroom</a>
+      <a href="../articles/a2-intro_to_ind_project_questions.html">a2) Introduction to shroom</a>
     </li>
     <li>
       <a href="../articles/b-loading_the_shroom_package.html">b) Loading the shroom package</a>
@@ -75,13 +70,13 @@
       <a href="../articles/f1-analysis_walkthrough_t_test_and_friends.html">f) Analysis walthrough: t-test and friends</a>
     </li>
     <li>
-      <a href="../articles/f3-analysis_walkthrough_2-way_ANOVA.html">f) Analysis walthrough: 2-way factorial model</a>
+      <a href="../articles/f3-analysis_walkthrough_2-way_ANOVA.html">f3) Analysis walthrough: 2-way factorial ANOVA</a>
     </li>
     <li>
-      <a href="../articles/f4-analysis_walkthrough_nested_ANOVA.html">f) Analysis walthrough: 2-way factorial model</a>
+      <a href="../articles/f4-analysis_walkthrough_nested_ANOVA.html">f4) Analysis walthrough: Nested ANOVA</a>
     </li>
     <li>
-      <a href="../articles/g1-calculating_effect_sizes_with_metafor.html">e) Calculating effect sizes using the metafor package</a>
+      <a href="../articles/g1-calculating_effect_sizes_with_metafor.html">g) Calculating effect sizes using the metafor package</a>
     </li>
     <li>
       <a href="../articles/g2-analysis_of_difference_scores.html">f) Analysis of difference scores: thinking about effect sizes, sample sizes &amp; effect size variances</a>
@@ -113,15 +108,14 @@
 <!--/.navbar -->
 
       
-      </header><div class="row">
+      </header><script src="f3-analysis_walkthrough_2-way_ANOVA_files/htmlwidgets-1.2/htmlwidgets.js"></script><script src="f3-analysis_walkthrough_2-way_ANOVA_files/viz-0.3/viz.js"></script><link href="f3-analysis_walkthrough_2-way_ANOVA_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
+<script src="f3-analysis_walkthrough_2-way_ANOVA_files/grViz-binding-1.0.0/grViz.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1><ol start="6" style="list-style-type: lower-alpha">
-<li>Analysis walthrough: 2-way factorial model</li>
-</ol></h1>
+      <h1>f3) Analysis walthrough: 2-way factorial ANOVA</h1>
                         <h4 class="author">Nathan Brouwer</h4>
             
-            <h4 class="date">2018-11-28</h4>
+            <h4 class="date">2018-12-11</h4>
       
       
       <div class="hidden name"><code>f3-analysis_walkthrough_2-way_ANOVA.Rmd</code></div>
@@ -133,8 +127,270 @@
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>This tutorial walks through some types of analysis that can be done using the shroom package. In particular it looks at the situation when you have data that can be group by two seperate categorical variables. In our data, we will look at the impacts of both sex (male vs. female) and experimental group (control vs. mutation to candidation gene) on wing scores.</p>
-<p>In the previous tutorial we used t-tests and similar analyses to look at just the impact of mutation (“experimental” flies) on wing scores of the female flies collected by one student, ignoring the males they collected. In this tutorial we will look at all of the flies collected by the same student.</p>
+<p>This tutorial walks through some types of analysis that can be done using the <em>shroom</em> package. In particular it looks at the situation when you have data that can be group by 2 seperate categorical variables. In our data, we will look at the impacts of both sex (male vs. female) and experimental group (control vs. mutation to candidation gene) on wing scores.</p>
+<p>In the previous tutorial we used t-tests and similar analyses to look at the impact of mutation (“experimental” flies) on wing scores of just the female flies collected by 1 student, ignoring the males they collected. In this tutorial we will look at all of the flies collected by the same student. We can therefore investigate the effects of experimentally mutating a candidate gene on shroom expression, fly sex, and any <strong>interaction</strong> between the experimental treatment and sex.</p>
+<p>We have 2 seperate variables, experiemental condition and sex, and each has 2 levels. We therefore have 2 conditions x 2 sexes = 4 possible combinations</p>
+<p>To be explicit these 4 groups are</p>
+<ol style="list-style-type: decimal">
+<li>female control flies</li>
+<li>male control flies</li>
+<li>female experimental flies</li>
+<li>male experimental flies</li>
+</ol>
+<p>Let’s call the impact of the experimental mutation “exp” and the impact of sex, “sex”. We can think about several model. The “exp” variable has 2 levels, “C” for the control genotype and “E” for an experimentally mutated candidate allele. The “sex” variable also has 2 levels, “F” for female and “M” for male.</p>
+<p>There 5 scenarios that could occur:</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong>No effect</strong>: All flies have on average the same wing score; that is, there is no difference in wing score between flies with and without the experiemntal mutation (C flies are the same as E flies) and no impact of sex (XX female flies are the same as XY male flies). So, the addition of the experimentally mutated allele to the fly genome as no effect, and the switching of an X for a Y chromosome has no effect.<br>
+</li>
+<li>
+<strong>Sex effect</strong>: Males (M) on average have different wing scores from females (F), but there is no impact of the experimental mutation. That is, there is an impact of trading a X chromosome for a Y chromosome, but no impact of switching a wildtype candidate allele for an experimentally mutated one.</li>
+<li>
+<strong>Experimental effect</strong>: Experimental flies (E) are on average different from control (C) flies, but there is no imapct of sex. So, among E flies, males and females are on average the same, and among C flies, males and females are on average the same.</li>
+<li>
+<strong>Additive effects</strong> of sex and experiment: Both sex and the experimental mutation both have effect on wing score, but they are independent. See below for an illustration.<br>
+</li>
+<li>
+<strong>Interactive effects</strong>: Both sex and experimental mutaiton have effects on wing score. Moreover, the effect of on variable depends on the other. See below for an illustration.</li>
+</ol>
+<p>In pseudo-R code we can fomulate this as 5 models:</p>
+<ol style="list-style-type: decimal">
+<li>Null model (no effect): wing.score ~ 1</li>
+<li>Sex model: wing.score ~ 1 + sex</li>
+<li>Experimental model: wing.score ~ 1 + expt</li>
+<li>Additive model: wing.score ~ 1 + sex + expt</li>
+<li>Interaction model: wing.score ~ 1 + sex + expt + sex x expt</li>
+</ol>
+<div id="the-null-model-wing-score-1" class="section level3">
+<h3 class="hasAnchor">
+<a href="#the-null-model-wing-score-1" class="anchor"></a>The null model (wing.score ~ 1)</h3>
+<p>In the above models the “1” represents the “intercept” term, which shows up in the summary() output R provides as “(Intercept)”. The meaning of this term depends on the other factors of the model. In the <strong>null model</strong> we postuate that even though the wing scores of flies might vary, this variation is not drive by either sex or the experimental mutation. In this case the intercept term is the overall or <strong>grand mean</strong> of all the flies. The null model is often called an <strong>intercept only model</strong> because it only contains this intercept term. (The term “intercept” makes the most sense when dealing with typical regression data, but the term is use for all linear model. If you dig into the underlying math, it makes sense as to why). The null model can be though of as saying “if someone asked you to guess what the wing score of a fly from your experiment was, your best guess would be the grand mean because most flies would be fairly close to that value.”</p>
+<p>If the grand mean wing score was 4.4, then final fitted model would simply be</p>
+<ul>
+<li>y ~ 4.4</li>
+</ul>
+<p>In the above formulation of have included the intercept in every model. This is the default way R calcualtes things. The intercepts is always implied unless explicly coded otherwise, so you’ll typically see the models coded like this</p>
+<ol style="list-style-type: decimal">
+<li>Null model (no effect): wing.score ~ 1</li>
+<li>Sex model: wing.score ~ sex</li>
+<li>Experimental model: wing.score ~ expt</li>
+<li>Additive model: wing.score ~ sex + expt</li>
+<li>Interaction model: wing.score ~ sex + expt + sex x expt</li>
+</ol>
+<p>However, the intercept term is always there so its good practice to write it out. The intercept term is denoted with a “1” in R; when writing generic model notation its usually called “B0” for “beta 0”.</p>
+</div>
+<div id="single-variable-models" class="section level3">
+<h3 class="hasAnchor">
+<a href="#single-variable-models" class="anchor"></a>Single-variable models</h3>
+<p>We have 2 models, the sex model and experimental model, each with a single variable. As I just noted, these models also contain an intercept, hence I write the sex model as</p>
+<ul>
+<li>wing.score ~ 1 + sex</li>
+</ul>
+<p>This represents an R-like statement of the model. A key aspect of this formulation of the model is that the intercept term is no longer the grand mean, but instead represents the <strong>baseline</strong> level of the sex factor. In this case, it represents the mean of the females (XX). The variable “sex” <em>does not</em> represent the mean of the males (XY), but rather the differences between the F group and the M group. That is, the sex variable is an <strong>effect size</strong>.</p>
+<p>Mathematically, what we are invoking is an equation like this</p>
+<ul>
+<li>wing.score ~ B0 + B1 x sex?</li>
+</ul>
+<p>Where B0 is our intercept term, which in this case is the mean of the females; B1 is the difference between males and females, and “sex?” takes on a value of 0 for females and 1 for males.</p>
+<p>The variable “sex?” is often called an <strong>indicator variable</strong>, where “0” indicates females, the baseline, and “1” indicates males. (This is also called a <strong>dummary variable</strong> or <strong>dummy coding</strong>).</p>
+<p>We can break this down into 2 equations</p>
+<ol style="list-style-type: decimal">
+<li>For females: wing.score ~ B0 + B1 x 0</li>
+<li>For males: wing.score ~ B0 + B1 x 1</li>
+</ol>
+<p>So, this reduces to</p>
+<ol style="list-style-type: decimal">
+<li>For females: wing.score ~ B0 + 0</li>
+<li>For males: wing.score ~ B0 + B1</li>
+</ol>
+<p>and further to</p>
+<ol style="list-style-type: decimal">
+<li>For females: wing.score ~ B0</li>
+<li>For males: wing.score ~ B0 + B1</li>
+</ol>
+<p>If the mean of females was 4.4 and the mean sof males 5.4, then it would work out to be</p>
+<ul>
+<li>B0 = 4.4</li>
+<li>B1 = 5.4 - 4.4 = 1.0</li>
+</ul>
+<p>The equations would be</p>
+<ol style="list-style-type: decimal">
+<li>Females: wing.score ~ 4.4 + 1 x 0</li>
+<li>Males: wing.score ~ 4.4 + 1 x 1</li>
+</ol>
+<p>Which simplifies to</p>
+<ol style="list-style-type: decimal">
+<li>Females: wing.score ~ 4.4 + 0</li>
+<li>Males: wing.score ~ 4.4 + 1</li>
+</ol>
+<p>and further to</p>
+<ol style="list-style-type: decimal">
+<li>Females: wing.score ~ 4.4</li>
+<li>Males: wing.score ~ 5.4</li>
+</ol>
+<p>The same logic would apply to a model of the experimental factor “expt”.</p>
+</div>
+<div id="additive-models" class="section level3">
+<h3 class="hasAnchor">
+<a href="#additive-models" class="anchor"></a>Additive models</h3>
+<p>The additive model postulates that there are seperate and independent effects of sex and experimental mutation So, sex changes wing score on average by a certain increment, and the experimental mutation changes the score by a certain increment, and these effects get mixed and matches for the four categories of flies.</p>
+<p>Our basic R-style equation is</p>
+<ul>
+<li>wing.score ~ 1 + sex + exp</li>
+</ul>
+<p>A more mathy equation would be</p>
+<ul>
+<li>wing.score ~ B0 + B1 x sex? + B2 x expt?</li>
+</ul>
+<p>B1 is the “impact” (effect size) of sex, and B2 is the impact of the experimental mutation. “sex?” takes on 0 for females and 1 for males, as before, and “expt?” takes on 0 for females and 1 for males.</p>
+<p>This implies 4 equations</p>
+<ol style="list-style-type: decimal">
+<li>Females controls: wing.score ~ B0 + B1 x 0 + B2 x 0</li>
+<li>Females experiemntal: wing.score ~ B0 + B1 x 1 + B2 x 0</li>
+<li>Male controls: wing.score ~ B0 + B1 x 0 + B2 x 1</li>
+<li>Male experiemntal: wing.score ~ B0 + B1 x 1 + B2 x 1</li>
+</ol>
+<p>This simplifies to</p>
+<ol style="list-style-type: decimal">
+<li>Females controls: wing.score ~ B0</li>
+<li>Females experiemntal: wing.score ~ B0 + B1 x 1</li>
+<li>Male controls: wing.score ~ B0 + B2 x 1</li>
+<li>Male experiemntal: wing.score ~ B0 + B1 x 1 + B2 x 1</li>
+</ol>
+<p>Suppose that females have a mean of 4.4, and the impact of swapping an X chromosome for a Y chromosome to make a male flie increases the wing score by 1.0. Additionally, the experimental mutation increases the wing score by 0.5</p>
+<p>The 4 equations would therefore be</p>
+<ol style="list-style-type: decimal">
+<li>Females controls: wing.score ~ 4.4 + 1 x 0 + 0.5 x 0</li>
+<li>Females experiemntal: wing.score ~ 4.4 + 1 x 1 + 0.5 x 0</li>
+<li>Male controls: wing.score ~ 4.4 + 1 x 0 + 0.5 x 1</li>
+<li>Male experiemntal: wing.score ~ 4.4 + 1 x 1 + 0.5 x 1</li>
+</ol>
+<p>This simplifies to</p>
+<ol style="list-style-type: decimal">
+<li>Females controls: wing.score ~ 4.4 + 0 + 0</li>
+<li>Females experiemntal: wing.score ~ 4.4 + 1 + 0</li>
+<li>Male controls: wing.score ~ 4.4 + 0.5</li>
+<li>Male experiemntal: wing.score ~ 4.4 + 1 + 0.5</li>
+</ol>
+<p>and further to</p>
+<ol style="list-style-type: decimal">
+<li>Females controls: wing.score ~ 4.4</li>
+<li>Females experiemntal: wing.score ~ 4.4 + 1</li>
+<li>Male controls: wing.score ~ 4.4 + 0.5</li>
+<li>Male experiemntal: wing.score ~ 4.4 + 1 + 0.5</li>
+</ol>
+<p>and even further to</p>
+<ol style="list-style-type: decimal">
+<li>Females controls: wing.score ~ 4.4</li>
+<li>Females experiemntal: wing.score ~ 5.4</li>
+<li>Male controls: wing.score ~ 4.9<br>
+</li>
+<li>Male experiemntal: wing.score ~ 6.9</li>
+</ol>
+<p>While we might want to write out all 4 equations, a more compact notation would just be</p>
+<p>wing.score ~ 4.4 + 1 x sex? + 0.4 x expt?.</p>
+<p>In a results section we migth say something like “our fitted model had the form wing.score ~ 4.4 + 1 x sex? + 0.4 x expt?</p>
+<p>where ‘sex?’ and ‘expt’ are indicator variables that can take on the values of 0 or 1."</p>
+</div>
+<div id="interaction-models-multiplicative" class="section level3">
+<h3 class="hasAnchor">
+<a href="#interaction-models-multiplicative" class="anchor"></a>Interaction models (multiplicative)</h3>
+<p>A model which has seperate effects for the two variables is called and <strong>aditive model</strong> because the effects are simply summed up. What if the effect of the experimental mutation depends on the sex of the fly? This can be described with a <strong>multiplicative model</strong> that contains and <strong>interaction term</strong>.</p>
+<p>The simples R notation would be</p>
+<ul>
+<li>wing.score ~ sex x exp</li>
+</ul>
+<p>This implies the full equation of</p>
+<ul>
+<li>wing.score ~ 1 + sex + exp + exp x sex</li>
+</ul>
+<p>R isn’t very picky, so all of the following will actually work the exact same way</p>
+<ol style="list-style-type: decimal">
+<li>wing.score ~ sex x exp</li>
+<li>wing.score ~ 1 + sex x exp</li>
+<li>wing.score ~ sex + sex x exp</li>
+<li>wing.score ~ 1 + sex + sex x exp</li>
+<li>wing.score ~ exp + sex x exp</li>
+<li>wing.score ~ 1 + exp + sex x exp</li>
+<li>wing.score ~ sex + exp + sex x exp</li>
+<li>wing.score ~ 1 + sex + exp + sex x exp</li>
+</ol>
+<p>The key part is just “sex x exp.” All the other terms in the model are implied because in order to have model with a multiplicative term of “sex x exp” you also need a sex term, and exp term, and an intercept.</p>
+<p>The mathy equation would be</p>
+<ul>
+<li>wing.score ~ B0 + B1 x sex? + B2 x expt? + B3 x sex? x expt?</li>
+</ul>
+<p>We now have 3 terms</p>
+<ol style="list-style-type: decimal">
+<li>B0: the intercept, which here is the baseline level. This would be females in the control group</li>
+<li>B1: the effect of sex.</li>
+<li>B2: the effect of the experiment</li>
+<li>B3: the effect of sex within the experimental group.</li>
+</ol>
+<p>This is somewhat simplified; if you have a model with an interaction term you have to be careful how to interpret the subsidary terms. For now we’ll set these issues aside.</p>
+<p>This implies four equations</p>
+<ol style="list-style-type: decimal">
+<li>Females controls: wing.score ~ B0 + B1 x 0 + B2 x 0 + B3 x 0 x 0</li>
+<li>Females experiemntal: wing.score ~ B0 + B1 x 1 + B2 x 0 + B3 x 0 x 1</li>
+<li>Male controls: wing.score ~ B0 + B1 x 0 + B2 x 1 + B3 x 1 x 0</li>
+<li>Male experiemntal: wing.score ~ B0 + B1 x 1 + B2 x 1 + B3 x 1 x 1</li>
+</ol>
+<p>We multiple the zeros and get</p>
+<ol style="list-style-type: decimal">
+<li>Females controls: wing.score ~ B0</li>
+<li>Females experiemntal: wing.score ~ B0 + B1 x 1<br>
+</li>
+<li>Male controls: wing.score ~ B0 + B2 x 1</li>
+<li>Male experiemntal: wing.score ~ B0 + B1 x 1 + B2 x 1 + B3 x 1 x 1</li>
+</ol>
+<p>And then the 1s</p>
+<ol style="list-style-type: decimal">
+<li>Females controls: wing.score ~ B0</li>
+<li>Females experiemntal: wing.score ~ B0 + B1<br>
+</li>
+<li>Male controls: wing.score ~ B0 + B2</li>
+<li>Male experiemntal: wing.score ~ B0 + B1 + B2 + B3</li>
+</ol>
+<p>Suppose that females have a mean of 4.4 as before, and the impact of swapping an X chromosome for a Y chromosome to make a male flie increases the wing score by 1.0. Additionally, the experimental mutation increases the wing score by 0.5; additinally in male experimental flies, the wing score increase by and additinal 1.5.</p>
+<p>So, our parameters are</p>
+<ul>
+<li>B0 = 4.4</li>
+<li>B1 = 1</li>
+<li>B2 = 0.5</li>
+<li>B3 = 1.5</li>
+</ul>
+<p>So we get</p>
+<ol style="list-style-type: decimal">
+<li>Females controls: wing.score ~ 4.4 + 1 x 0 + 0.5 x 0 + 1.5 x 0 x 0</li>
+<li>Females experiemntal: wing.score ~ 4.4 + 1 x 1 + 0.5 x 0 + 1.5 x 0 x 1</li>
+<li>Male controls: wing.score ~ 4.4 + 1 x 0 + 0.5 x 1 + 1.5 x 1 x 0</li>
+<li>Male experiemntal: wing.score ~ 4.4 + 1 x 1 + 0.5 x 1 + 1.5 x 1 x 1</li>
+</ol>
+<p>After the mulplication goes through we get</p>
+<ol style="list-style-type: decimal">
+<li>Females controls: wing.score ~ 4.4</li>
+<li>Females experiemntal: wing.score ~ 4.4 + 1</li>
+<li>Male controls: wing.score ~ 4.4 + 0.5</li>
+<li>Male experiemntal: wing.score ~ 4.4 + 1 + 0.5 + 1.5</li>
+</ol>
+<p>And finally</p>
+<ol style="list-style-type: decimal">
+<li>Females controls: wing.score ~ 4.4</li>
+<li>Females experiemntal: wing.score ~ 5.4</li>
+<li>Male controls: wing.score ~ 4.9<br>
+</li>
+<li>Male experiemntal: wing.score ~ 7.4</li>
+</ol>
+<p>While we might want to write out all 4 equations, a more compact notation would just be</p>
+<p>wing.score ~ 4.4 + 1 x sex? + 0.4 x expt? + 1.5 x sex? x expt?</p>
+<p>In a results section we migth say something like “our fitted model had the form wing.score ~ 4.4 + 1 x sex? + 0.4 x expt? + 1.5 x sex? x expt?</p>
+<p>where ‘sex?’ and ‘expt’ are indicator variables that can take on the values of 0 or 1."</p>
+</div>
+</div>
+<div id="example-models" class="section level2">
+<h2 class="hasAnchor">
+<a href="#example-models" class="anchor"></a>Example models</h2>
+<p>I’ll now fit some example models</p>
 </div>
 <div id="preliminaries" class="section level2">
 <h2 class="hasAnchor">
@@ -158,7 +414,7 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt;     ggsave</span>
 
-<span class="kw">library</span>(dplyr)   <span class="co">#data cleaning</span>
+<span class="kw">library</span>(dplyr)   <span class="co">#preliminary data cleaning</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Attaching package: 'dplyr'</span>
 <span class="co">#&gt; The following objects are masked from 'package:stats':</span>
@@ -167,8 +423,8 @@
 <span class="co">#&gt; The following objects are masked from 'package:base':</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt;     intersect, setdiff, setequal, union</span>
-
-<span class="kw">library</span>(car)
+      
+      <span class="kw">library</span>(car)
 <span class="co">#&gt; Loading required package: carData</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Attaching package: 'car'</span>
@@ -188,25 +444,9 @@
 <span class="co">#&gt;     slice</span>
 <span class="kw">library</span>(lme4)
 <span class="co">#&gt; Loading required package: Matrix</span>
-<span class="kw">library</span>(lawstat) <span class="co">#?</span>
-<span class="co">#&gt; Loading required package: Kendall</span>
-<span class="co">#&gt; Loading required package: mvtnorm</span>
-<span class="co">#&gt; Loading required package: VGAM</span>
-<span class="co">#&gt; Loading required package: splines</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'VGAM'</span>
-<span class="co">#&gt; The following object is masked from 'package:bbmle':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     AICc</span>
-<span class="co">#&gt; The following object is masked from 'package:car':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     logit</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'lawstat'</span>
-<span class="co">#&gt; The following object is masked from 'package:car':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     levene.test</span>
-<span class="kw">library</span>(effsize) <span class="co">#Cohen's dw</span></code></pre></div>
+<span class="kw">library</span>(data.tree)
+<span class="co"># library(lawstat) #?</span>
+<span class="co"># library(effsize) #Cohen's dw</span></code></pre></div>
 </div>
 <div id="load-data" class="section level3">
 <h3 class="hasAnchor">
@@ -291,58 +531,21 @@
 <div id="structure-of-the-data" class="section level4">
 <h4 class="hasAnchor">
 <a href="#structure-of-the-data" class="anchor"></a>Structure of the data</h4>
-<p>We can think of the data like this</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">working &lt;-<span class="st"> </span>student1.all
-working<span class="op">$</span>i &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(working)
-
-i.F.E &lt;-<span class="st"> </span><span class="kw">which</span>(working<span class="op">$</span>sex <span class="op">==</span><span class="st"> "F"</span> <span class="op">&amp;</span>
-<span class="st">                 </span>working<span class="op">$</span>E.or.C <span class="op">==</span><span class="st"> "E"</span>)
-i.F.C &lt;-<span class="st"> </span><span class="kw">which</span>(working<span class="op">$</span>sex <span class="op">==</span><span class="st"> "F"</span> <span class="op">&amp;</span>
-<span class="st">                 </span>working<span class="op">$</span>E.or.C <span class="op">==</span><span class="st"> "C"</span>)
-
-i.M.E &lt;-<span class="st"> </span><span class="kw">which</span>(working<span class="op">$</span>sex <span class="op">==</span><span class="st"> "M"</span> <span class="op">&amp;</span>
-<span class="st">                 </span>working<span class="op">$</span>E.or.C <span class="op">==</span><span class="st"> "E"</span>)
-i.M.C &lt;-<span class="st"> </span><span class="kw">which</span>(working<span class="op">$</span>sex <span class="op">==</span><span class="st"> "M"</span> <span class="op">&amp;</span>
-<span class="st">                 </span>working<span class="op">$</span>E.or.C <span class="op">==</span><span class="st"> "C"</span>)
-
-i.use &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">range</span>(working<span class="op">$</span>i[i.F.E])
-,<span class="kw">range</span>(working<span class="op">$</span>i[i.F.C])
-,<span class="kw">range</span>(working<span class="op">$</span>i[i.M.E])
-,<span class="kw">range</span>(working<span class="op">$</span>i[i.M.C]))
-
-i.medians &lt;-<span class="st"> </span><span class="kw">round</span>(<span class="kw">c</span>(<span class="kw">median</span>(working<span class="op">$</span>i[i.F.E])
-,<span class="kw">median</span>(working<span class="op">$</span>i[i.F.C])
-,<span class="kw">median</span>(working<span class="op">$</span>i[i.M.E])
-,<span class="kw">median</span>(working<span class="op">$</span>i[i.M.C])))
-
-
-
-working[<span class="op">-</span>i.use, <span class="st">"i"</span>] &lt;-<span class="st"> "*</span><span class="ch">\n</span><span class="st">*</span><span class="ch">\n</span><span class="st">*"</span>
-
-
-working<span class="op">$</span>i[<span class="kw">which</span>(working<span class="op">$</span>i <span class="op">!=</span><span class="st">  "*</span><span class="ch">\n</span><span class="st">*</span><span class="ch">\n</span><span class="st">*"</span>)] &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="st">"Fly"</span>,working<span class="op">$</span>i[<span class="kw">which</span>(working<span class="op">$</span>i <span class="op">!=</span><span class="st">  "*</span><span class="ch">\n</span><span class="st">*</span><span class="ch">\n</span><span class="st">*"</span>)])
-
-working<span class="op">$</span>pathString &lt;-<span class="st"> </span><span class="kw">with</span>(working,
-                              <span class="kw">paste</span>(allele,
-                                    sex,
-                                    E.or.C,
-                                    i,
-                                    <span class="dt">sep =</span> <span class="st">"/"</span>))
-
-i &lt;-<span class="st"> </span><span class="kw">sort</span>(<span class="kw">c</span>(i.use,i.medians))
-working.tree &lt;-<span class="st"> </span><span class="kw">as.Node</span>(working[i,])
-
-<span class="kw">SetGraphStyle</span>(working.tree,
-              <span class="dt">rankdir=</span><span class="st">"LR"</span>)
-
-<span class="kw">plot</span>(working.tree)
-     </code></pre></div>
-<p>Plot boxplots. Sex is set as the x axis, and then the two treatments are colored coded using fill =</p>
+<p>We can think of the data as structured like this </p>
+<div id="htmlwidget-d6c0284dd28bd7fb4249" style="width:700px;height:432.632880098888px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-d6c0284dd28bd7fb4249">{"x":{"diagram":"digraph {\n\ngraph [rankdir = \"LR\"]\n\n\n\n  \"1\" [label = \"abl[2]\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"2\" [label = \"M\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"3\" [label = \"E\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"4\" [label = \"Fly 1\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"5\" [label = \"*\n*\n*\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"6\" [label = \"Fly 19\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"7\" [label = \"C\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"8\" [label = \"Fly 20\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"9\" [label = \"*\n*\n*\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"10\" [label = \"Fly 36\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"11\" [label = \"F\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"12\" [label = \"E\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"13\" [label = \"Fly 37\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"14\" [label = \"*\n*\n*\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"15\" [label = \"Fly 44\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"16\" [label = \"C\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"17\" [label = \"Fly 45\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"18\" [label = \"*\n*\n*\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"19\" [label = \"Fly 60\", fillcolor = \"#FFFFFF\", fontcolor = \"#000000\"] \n  \"1\"->\"2\" \n  \"1\"->\"11\" \n  \"2\"->\"3\" \n  \"2\"->\"7\" \n  \"11\"->\"12\" \n  \"11\"->\"16\" \n  \"3\"->\"4\" \n  \"3\"->\"5\" \n  \"3\"->\"6\" \n  \"7\"->\"8\" \n  \"7\"->\"9\" \n  \"7\"->\"10\" \n  \"12\"->\"13\" \n  \"12\"->\"14\" \n  \"12\"->\"15\" \n  \"16\"->\"17\" \n  \"16\"->\"18\" \n  \"16\"->\"19\" \n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div id="exploratory-plot" class="section level3">
+<h3 class="hasAnchor">
+<a href="#exploratory-plot" class="anchor"></a>Exploratory plot</h3>
+<p>Plot boxplots. Sex is set as the x axis, and then the 2 treatments are colored coded using fill =</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggboxplot</span>(<span class="dt">data =</span> student1.all,
           <span class="dt">y =</span> <span class="st">"wing.score"</span>,
           <span class="dt">x =</span> <span class="st">"sex"</span>,
           <span class="dt">fill =</span> <span class="st">"E.or.C"</span>)</code></pre></div>
 <p><img src="f3-analysis_walkthrough_2-way_ANOVA_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+<p>It look like we have an <strong>interaction</strong> effect. In female flies the experimental (E) scores are lower than controls, but in males the E’s are <em>higher</em>.</p>
 <p>For plotting it can be very helpful to make a new variable that combines two seperate colums.</p>
 <p>First I’ll make the new varible using paste()</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">student1.all<span class="op">$</span>group &lt;-<span class="st"> </span><span class="kw">paste</span>(student1.all<span class="op">$</span>sex,
@@ -361,7 +564,6 @@ working.tree &lt;-<span class="st"> </span><span class="kw">as.Node</span>(worki
           <span class="dt">size =</span> <span class="fl">1.2</span>)</code></pre></div>
 <p><img src="f3-analysis_walkthrough_2-way_ANOVA_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 </div>
-</div>
 <div id="factorial-anova" class="section level3">
 <h3 class="hasAnchor">
 <a href="#factorial-anova" class="anchor"></a>Factorial ANOVA</h3>
@@ -372,7 +574,6 @@ working.tree &lt;-<span class="st"> </span><span class="kw">as.Node</span>(worki
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggerrorplot</span>(<span class="dt">data =</span> student1.all,
           <span class="dt">y =</span> <span class="st">"wing.score"</span>,
           <span class="dt">x =</span> <span class="ot">NULL</span>,
-          <span class="dt">color =</span> <span class="st">"sex"</span>,
           <span class="dt">desc_stat =</span> <span class="st">"mean_ci"</span>,
           <span class="dt">size =</span> <span class="fl">1.2</span>)</code></pre></div>
 <p><img src="f3-analysis_walkthrough_2-way_ANOVA_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
@@ -414,7 +615,7 @@ working.tree &lt;-<span class="st"> </span><span class="kw">as.Node</span>(worki
           <span class="dt">size =</span> <span class="fl">1.2</span>)</code></pre></div>
 <p><img src="f3-analysis_walkthrough_2-way_ANOVA_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
 <p>Now we can include both at the same time. I call this an <strong>additive model</strong> because it assumes the effect of one variable is independent of what is going on with the other, so the effects of the experimenta are just added to the effect of being male or feamle.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lm.add    &lt;-<span class="st"> </span><span class="kw">lm</span>(wing.score <span class="op">~</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>E.or.C, <span class="dt">data =</span> student1.all)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lm.add    &lt;-<span class="st"> </span><span class="kw">lm</span>(wing.score <span class="op">~</span><span class="st"> </span><span class="dv">1</span><span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>E.or.C, <span class="dt">data =</span> student1.all)</code></pre></div>
 <p>This is actually a bit tricky to graph so we’ll leave it alone.</p>
 <p>Finally we build a model that includes and <strong>interaction</strong>. This allows the impact of the experimental treatment to depend on the sex. We can see this in the graph above: Both male and female control flies (F.C and M.C) are similar. Female experimental flies are much lower than both F.C and M.C. In contrast, male experimental flies (M.E) are the highst group. So, the impact of the experimental treatment causes female flies to get a lower wing score, but male flies to get a higher wing score, relative to controls.</p>
 <p>The interaction model can be coded like this.</p>
@@ -434,7 +635,7 @@ working.tree &lt;-<span class="st"> </span><span class="kw">as.Node</span>(worki
           <span class="dt">desc_stat =</span> <span class="st">"mean_ci"</span>,
           <span class="dt">size =</span> <span class="fl">1.2</span>)</code></pre></div>
 <p><img src="f3-analysis_walkthrough_2-way_ANOVA_files/figure-html/unnamed-chunk-25-1.png" width="700"></p>
-<p>We can get the means by hand using dplyr if we pass both sex and E.or.C to group_by</p>
+<p>We can get the means by hand using dplyr if we pass both sex and E.or.C to group_by()</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">student1.all <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">group_by</span>(sex, E.or.C) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(wing.score))
@@ -446,10 +647,37 @@ working.tree &lt;-<span class="st"> </span><span class="kw">as.Node</span>(worki
 <span class="co">#&gt; 2 F     E       3.25</span>
 <span class="co">#&gt; 3 M     C       4.88</span>
 <span class="co">#&gt; 4 M     E       5.32</span></code></pre></div>
-<p>We get teh same results if we use the “group” variable</p>
+<p>We get the same results if we use the “group” variable we made</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">student1.all <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">group_by</span>(group) <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(wing.score))</code></pre></div>
+<p>Compare the values of the summary stats to the output of the summary() command.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">coef</span>(<span class="kw">summary</span>(lm.intxn))
+<span class="co">#&gt;                Estimate Std. Error   t value     Pr(&gt;|t|)</span>
+<span class="co">#&gt; (Intercept)   4.3750000  0.1535298 28.496100 5.130954e-35</span>
+<span class="co">#&gt; sexM          0.5073529  0.2139071  2.371838 2.116218e-02</span>
+<span class="co">#&gt; E.or.CE      -1.1250000  0.2659214 -4.230574 8.718731e-05</span>
+<span class="co">#&gt; sexM:E.or.CE  1.5584365  0.3357806  4.641234 2.131605e-05</span></code></pre></div>
+<p>NOte that</p>
+<ul>
+<li>“sexM” can be interpreted as “sex? = M”</li>
+<li>“E.or.CE” as “E.or.C? = E”</li>
+<li>“sexM:E.or.CE” as “sex? = M x”</li>
+</ul>
+<p>How do we get from summary output of the model to the group means? The grou means are</p>
+<ol style="list-style-type: decimal">
+<li>F.C (female control) = 4.38</li>
+<li>F.E (female experimental) = 3.25</li>
+<li>M.C (male contorl) = 4.88</li>
+<li>M.E (male experimental) = 5.32</li>
+</ol>
+<p>We can substitute the appropriate numbers</p>
+<ol style="list-style-type: decimal">
+<li>F.C = “(Int)” = 4.38</li>
+<li>F.E = “(Int)” + “E.or.CE” = 4.38 + -1.14 = 3.25</li>
+<li>M.C = “(Int)” + “sexM” = 4.38 + 0.507 = 4.88</li>
+<li>M.E = “(Int)” + “E.or.CE” + “sexM” + sexM:E.or.CE = 4.38 + -1.14 + 0.507 + 1.6 = 5.32</li>
+</ol>
 <div id="model-formulas" class="section level5">
 <h5 class="hasAnchor">
 <a href="#model-formulas" class="anchor"></a>Model formulas</h5>
@@ -493,7 +721,7 @@ working.tree &lt;-<span class="st"> </span><span class="kw">as.Node</span>(worki
 <span class="co">#&gt; Analysis of Variance Table</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model 1: wing.score ~ 1 + sex</span>
-<span class="co">#&gt; Model 2: wing.score ~ sex + E.or.C</span>
+<span class="co">#&gt; Model 2: wing.score ~ 1 + sex + E.or.C</span>
 <span class="co">#&gt;   Res.Df    RSS Df Sum of Sq      F Pr(&gt;F)</span>
 <span class="co">#&gt; 1     58 29.556                           </span>
 <span class="co">#&gt; 2     57 29.244  1   0.31154 0.6072 0.4391</span></code></pre></div>
@@ -503,7 +731,7 @@ working.tree &lt;-<span class="st"> </span><span class="kw">as.Node</span>(worki
 <span class="co">#&gt; Analysis of Variance Table</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model 1: wing.score ~ E.or.C</span>
-<span class="co">#&gt; Model 2: wing.score ~ sex + E.or.C</span>
+<span class="co">#&gt; Model 2: wing.score ~ 1 + sex + E.or.C</span>
 <span class="co">#&gt;   Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    </span>
 <span class="co">#&gt; 1     58 47.266                                  </span>
 <span class="co">#&gt; 2     57 29.244  1    18.022 35.127 1.895e-07 ***</span>
@@ -520,7 +748,7 @@ working.tree &lt;-<span class="st"> </span><span class="kw">as.Node</span>(worki
 <span class="co">#&gt; Analysis of Variance Table</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Model 1: wing.score ~ sex * E.or.C</span>
-<span class="co">#&gt; Model 2: wing.score ~ sex + E.or.C</span>
+<span class="co">#&gt; Model 2: wing.score ~ 1 + sex + E.or.C</span>
 <span class="co">#&gt;   Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    </span>
 <span class="co">#&gt; 1     56 21.120                                  </span>
 <span class="co">#&gt; 2     57 29.244 -1    -8.124 21.541 2.132e-05 ***</span>
@@ -572,6 +800,7 @@ working.tree &lt;-<span class="st"> </span><span class="kw">as.Node</span>(worki
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#introduction">Introduction</a></li>
+      <li><a href="#example-models">Example models</a></li>
       <li><a href="#preliminaries">Preliminaries</a></li>
       <li><a href="#cleaning-and-subsetting-the-wing-data">Cleaning and subsetting the wing data</a></li>
       <li><a href="#data-analysis-factorial-anova">Data analysis: Factorial ANOVA</a></li>
@@ -595,6 +824,5 @@ working.tree &lt;-<span class="st"> </span><span class="kw">as.Node</span>(worki
 
   
 
-  
-</body>
+  </body>
 </html>

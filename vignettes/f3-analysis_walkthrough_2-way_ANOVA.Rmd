@@ -1,8 +1,8 @@
 ---
-title: "f3) Analysis walthrough: 2-way factorial model"
+title: "f3) Analysis walthrough: 2-way factorial ANOVA"
 author: "Nathan Brouwer"
 date: "`r Sys.Date()`"
-output: rmarkdown::pdf_document
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEncoding{UTF-8}
@@ -21,9 +21,288 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-This tutorial walks through some types of analysis that can be done using the shroom package.  In particular it looks at the situation when you have data that can be group by two seperate categorical variables.  In our data, we will look at the impacts of both sex (male vs. female) and experimental group (control vs. mutation to candidation gene) on wing scores.
+This tutorial walks through some types of analysis that can be done using the *shroom* package.  In particular it looks at the situation when you have data that can be group by 2 seperate categorical variables.  In our data, we will look at the impacts of both sex (male vs. female) and experimental group (control vs. mutation to candidation gene) on wing scores.
 
-In the previous tutorial we used t-tests and similar analyses to look at just the impact of mutation ("experimental" flies) on wing scores of the female flies collected by one student, ignoring the males they collected.  In this tutorial we will look at all of the flies collected by the same student.
+In the previous tutorial we used t-tests and similar analyses to look at  the impact of mutation ("experimental" flies) on wing scores of just the female flies collected by 1 student, ignoring the males they collected.  In this tutorial we will look at all of the flies collected by the same student.  We can therefore investigate the effects of experimentally mutating a candidate gene on shroom expression, fly sex, and any **interaction** between the experimental treatment and sex.
+
+We have 2 seperate variables, experiemental condition and sex, and each has 2 levels.  We therefore have 2 conditions x 2 sexes = 4 possible combinations
+
+To be explicit these 4 groups are
+
+1. female control flies
+1. male control flies
+1. female experimental flies
+1. male experimental flies
+
+ Let's call the impact of the experimental mutation "exp" and the impact of sex, "sex".  We can think about several model.  The "exp" variable has 2 levels, "C" for the control genotype and "E" for an experimentally mutated candidate allele.  The "sex" variable also has 2 levels, "F" for female and "M" for male.
+ 
+There 5 scenarios that could occur:
+
+1. **No effect**: All flies have on average the same wing score; that is, there is no difference in wing score between flies with and without the experiemntal mutation (C flies are the same as E flies) and no impact of sex (XX female flies are the same as XY male flies).  So, the addition of the experimentally mutated allele to the fly genome as no effect, and the switching of an X for a Y chromosome has no effect.                   
+1. **Sex effect**: Males (M) on average have different wing scores from females (F), but there is no impact of the experimental mutation.  That is, there is an impact of trading a X chromosome for a Y chromosome, but no impact of switching a wildtype candidate allele for an experimentally mutated one.
+1. **Experimental effect**: Experimental flies (E) are on average different from control (C) flies, but there is no imapct of sex.  So, among E flies, males and females are on average the same, and among C flies, males and females are on average the same.
+1. **Additive effects** of sex and experiment: Both sex and the experimental mutation both have effect on wing score, but they are independent.  See below for an illustration.  
+1. **Interactive effects**: Both sex and experimental mutaiton have effects on wing score.  Moreover, the effect of on variable depends on the other.  See below for an illustration.
+
+In pseudo-R code we can fomulate this as 5 models:
+
+1. Null model (no effect): wing.score ~ 1
+1. Sex model:              wing.score ~ 1 + sex
+1. Experimental model:     wing.score ~ 1       + expt
+1. Additive model:         wing.score ~ 1 + sex + expt
+1. Interaction model:      wing.score ~ 1 + sex + expt + sex x expt
+
+
+### The null model (wing.score ~ 1)
+In the above models the "1" represents the "intercept" term, which shows up in the summary() output R provides as "(Intercept)".  The meaning of this term depends on the other factors of the model.  In the **null model** we postuate that even though the wing scores of flies might vary, this variation is not drive by either sex or the experimental mutation.  In this case the intercept term is the overall or **grand mean** of all the flies.  The null model is often called an **intercept only model** because it only contains this intercept term.  (The term "intercept" makes the most sense when dealing with typical regression data, but the term is use for all linear model.  If you dig into the underlying math, it makes sense as to why).  The null model can be though of as saying "if someone asked you to guess what the wing score of a fly from your experiment was, your best guess would be the grand mean because most flies would be fairly close to that value."  
+
+If the grand mean wing score was 4.4, then final fitted model would simply be
+
+* y ~ 4.4
+
+In the above formulation of have included the intercept in every model.  This is the default way R calcualtes things.  The intercepts is always implied unless explicly coded otherwise, so you'll typically see the models coded like this
+
+1. Null model (no effect): wing.score ~ 1
+1. Sex model:              wing.score ~ sex
+1. Experimental model:     wing.score ~ expt
+1. Additive model:         wing.score ~ sex + expt
+1. Interaction model:      wing.score ~ sex + expt + sex x expt
+
+However, the intercept term is always there so its good practice to write it out. The intercept term is denoted with a "1" in R; when writing generic model notation its usually called "B0" for "beta 0".
+
+
+### Single-variable models
+
+We have 2 models, the sex model and experimental model, each with a single variable.  As I just noted, these models also contain an intercept, hence I write the sex model as 
+
+* wing.score ~ 1 + sex
+
+This represents an R-like statement of the model.  A key aspect of this formulation of the model is that the intercept term is no longer the grand mean, but instead represents the **baseline** level of the sex factor.  In this case, it represents the mean of the females (XX).  The variable "sex" *does not* represent the mean of the males (XY), but rather the differences between the F group and the M group.  That is, the sex variable is an **effect size**.
+
+Mathematically, what we are invoking is an equation like this
+
+* wing.score ~ B0 + B1 x sex?
+
+Where B0 is our intercept term, which in this case is the mean of the females; B1 is the difference between males and females, and "sex?" takes on a value of 0 for females and 1 for males.  
+
+The variable "sex?" is often called an **indicator variable**, where "0" indicates females, the baseline, and "1" indicates males.  (This is also called a **dummary variable** or **dummy coding**).
+
+We can break this down into 2 equations
+
+1. For females: wing.score ~ B0 + B1 x 0
+1. For males:   wing.score ~ B0 + B1 x 1
+
+So, this reduces to 
+
+1. For females: wing.score ~ B0 + 0
+1. For males:   wing.score ~ B0 + B1 
+
+and further to 
+
+1. For females: wing.score ~ B0 
+1. For males:   wing.score ~ B0 + B1 
+
+If the mean of females was 4.4 and the mean sof males 5.4, then it would work out to be
+
+* B0 = 4.4
+* B1 = 5.4 - 4.4 = 1.0
+
+The equations would be
+
+1. Females: wing.score ~ 4.4 + 1 x 0
+1. Males:   wing.score ~ 4.4 + 1 x 1
+
+Which simplifies to
+
+1. Females: wing.score ~ 4.4 + 0 
+1. Males:   wing.score ~ 4.4 + 1 
+
+
+and further to
+
+1. Females: wing.score ~ 4.4
+1. Males:   wing.score ~ 5.4
+
+The same logic would apply to a model of the experimental factor "expt".
+
+
+### Additive models
+
+The additive model postulates that there are seperate and independent effects of sex and experimental mutation  So, sex changes wing score on average by a certain increment, and the experimental mutation changes the score by a certain increment, and these effects get mixed and matches for the four categories of flies.
+
+
+Our basic R-style equation is
+
+* wing.score ~ 1 + sex + exp
+
+A more mathy equation would be
+
+* wing.score ~ B0 + B1 x sex? + B2 x expt?
+
+B1 is the "impact" (effect size) of sex, and B2 is the impact of the experimental mutation. "sex?" takes on 0 for females and 1 for males, as before, and "expt?" takes on 0 for females and 1 for males.
+
+This implies 4 equations
+
+1. Females controls:     wing.score ~ B0 + B1 x 0 + B2 x 0
+1. Females experiemntal: wing.score ~ B0 + B1 x 1 + B2 x 0
+1. Male controls:        wing.score ~ B0 + B1 x 0 + B2 x 1
+1. Male experiemntal:    wing.score ~ B0 + B1 x 1 + B2 x 1
+
+This simplifies to
+
+1. Females controls:     wing.score ~ B0 
+1. Females experiemntal: wing.score ~ B0 + B1 x 1 
+1. Male controls:        wing.score ~ B0          + B2 x 1
+1. Male experiemntal:    wing.score ~ B0 + B1 x 1 + B2 x 1
+
+
+Suppose that females have a mean of 4.4, and the impact of swapping an X chromosome for a Y chromosome to make a male flie increases the wing score by 1.0.  Additionally, the experimental mutation increases the wing score by 0.5 
+
+The 4 equations would therefore be 
+
+1. Females controls:     wing.score ~ 4.4 + 1 x 0 + 0.5 x 0
+1. Females experiemntal: wing.score ~ 4.4 + 1 x 1 + 0.5 x 0
+1. Male controls:        wing.score ~ 4.4 + 1 x 0 + 0.5 x 1
+1. Male experiemntal:    wing.score ~ 4.4 + 1 x 1 + 0.5 x 1
+
+This simplifies to 
+
+1. Females controls:     wing.score ~ 4.4 + 0 + 0
+1. Females experiemntal: wing.score ~ 4.4 + 1 + 0
+1. Male controls:        wing.score ~ 4.4     + 0.5 
+1. Male experiemntal:    wing.score ~ 4.4 + 1 + 0.5 
+
+and further to
+
+1. Females controls:     wing.score ~ 4.4 
+1. Females experiemntal: wing.score ~ 4.4 + 1 
+1. Male controls:        wing.score ~ 4.4     + 0.5 
+1. Male experiemntal:    wing.score ~ 4.4 + 1 + 0.5 
+
+and even further to
+
+1. Females controls:     wing.score ~ 4.4 
+1. Females experiemntal: wing.score ~ 5.4 
+1. Male controls:        wing.score ~ 4.9     
+1. Male experiemntal:    wing.score ~ 6.9
+
+While we might want to write out all 4 equations, a more compact notation would just be
+
+
+wing.score ~ 4.4 + 1 x sex? + 0.4 x expt?.
+
+In a results section we migth say something like "our fitted model had the form 
+wing.score ~ 4.4 + 1 x sex? + 0.4 x expt?
+
+where 'sex?' and 'expt' are indicator variables that can take on the values of 0 or 1."
+
+
+### Interaction models (multiplicative)
+
+A model which has seperate effects for the two variables is called and **aditive model** because the effects are simply summed up.  What if the effect of the experimental mutation depends on the sex of the fly?  This can be described with a **multiplicative model** that contains and **interaction term**.
+
+The simples R notation would be
+
+* wing.score ~ sex x exp
+
+This implies the full equation of
+
+* wing.score ~ 1 + sex + exp + exp x sex
+
+R isn't very picky, so all of the following will actually work the exact same way
+
+1. wing.score ~ sex x exp
+1. wing.score ~ 1 + sex x exp
+1. wing.score ~ sex + sex x exp
+1. wing.score ~ 1 + sex + sex x exp
+1. wing.score ~ exp + sex x exp
+1. wing.score ~ 1 + exp + sex x exp
+1. wing.score ~ sex + exp + sex x exp
+1. wing.score ~ 1 + sex + exp + sex x exp
+
+The key part is just "sex x exp."  All the other terms in the model are implied because in order to have model with a multiplicative term of "sex x exp" you also need a sex term, and exp term, and an intercept.
+
+The mathy equation would be
+
+* wing.score ~ B0 + B1 x sex? + B2 x expt? + B3 x sex? x expt?
+
+We now have 3 terms
+
+1. B0: the intercept, which here is the baseline level.  This would be females in the control group
+1. B1: the effect of sex. 
+1. B2: the effect of the experiment
+1. B3: the effect of sex within the experimental group.
+
+This is somewhat simplified; if you have a  model with an interaction term you have to be careful how to interpret the subsidary terms.  For now we'll set these issues aside.
+
+
+This implies four equations 
+
+1. Females controls:     wing.score ~ B0 + B1 x 0 + B2 x 0 + B3 x 0 x 0
+1. Females experiemntal: wing.score ~ B0 + B1 x 1 + B2 x 0 + B3 x 0 x 1
+1. Male controls:        wing.score ~ B0 + B1 x 0 + B2 x 1 + B3 x 1 x 0
+1. Male experiemntal:    wing.score ~ B0 + B1 x 1 + B2 x 1 + B3 x 1 x 1
+
+We multiple the zeros and get
+
+1. Females controls:     wing.score ~ B0 
+1. Females experiemntal: wing.score ~ B0 + B1 x 1          
+1. Male controls:        wing.score ~ B0          + B2 x 1 
+1. Male experiemntal:    wing.score ~ B0 + B1 x 1 + B2 x 1 + B3 x 1 x 1
+
+And then the 1s
+
+1. Females controls:     wing.score ~ B0 
+1. Females experiemntal: wing.score ~ B0 + B1          
+1. Male controls:        wing.score ~ B0          + B2 
+1. Male experiemntal:    wing.score ~ B0 + B1     + B2     + B3 
+
+
+Suppose that females have a mean of 4.4 as before, and the impact of swapping an X chromosome for a Y chromosome to make a male flie increases the wing score by 1.0.  Additionally, the experimental mutation increases the wing score by 0.5; additinally in male experimental flies, the wing score increase by and additinal 1.5.
+
+So, our parameters are
+
+* B0 = 4.4
+* B1 = 1
+* B2 = 0.5
+* B3 = 1.5
+
+So we get 
+
+1. Females controls:     wing.score ~ 4.4 + 1 x 0 + 0.5 x 0 + 1.5 x 0 x 0
+1. Females experiemntal: wing.score ~ 4.4 + 1 x 1 + 0.5 x 0 + 1.5 x 0 x 1
+1. Male controls:        wing.score ~ 4.4 + 1 x 0 + 0.5 x 1 + 1.5 x 1 x 0
+1. Male experiemntal:    wing.score ~ 4.4 + 1 x 1 + 0.5 x 1 + 1.5 x 1 x 1
+
+
+After the mulplication goes through we get
+
+1. Females controls:     wing.score ~ 4.4 
+1. Females experiemntal: wing.score ~ 4.4 + 1 
+1. Male controls:        wing.score ~ 4.4          + 0.5 
+1. Male experiemntal:    wing.score ~ 4.4 + 1      + 0.5    + 1.5 
+
+And finally
+
+1. Females controls:     wing.score ~ 4.4 
+1. Females experiemntal: wing.score ~ 5.4 
+1. Male controls:        wing.score ~ 4.9       
+1. Male experiemntal:    wing.score ~ 7.4
+
+
+While we might want to write out all 4 equations, a more compact notation would just be
+
+wing.score ~ 4.4 + 1 x sex? + 0.4 x expt? + 1.5 x sex? x expt?
+
+In a results section we migth say something like "our fitted model had the form 
+wing.score ~ 4.4 + 1 x sex? + 0.4 x expt? + 1.5 x sex? x expt?
+
+where 'sex?' and 'expt' are indicator variables that can take on the values of 0 or 1."
+
+
+## Example models
+
+I'll now fit some example models
 
 
 ## Preliminaries
@@ -41,17 +320,18 @@ Load other essential packages
 library(ggpubr)  #plotting
 library(cowplot)
 
-library(dplyr)   #data cleaning
-
-library(car)
+library(dplyr)   #preliminary data cleaning
+      
+      library(car)
 
 library(broom)
 
 
 library(bbmle)   #AIC taBLE
 library(lme4)
-library(lawstat) #?
-library(effsize) #Cohen's dw
+library(data.tree)
+# library(lawstat) #?
+# library(effsize) #Cohen's dw
 ```
 
 
@@ -128,8 +408,8 @@ student1.all <- wingscores %>% filter(student.ID ==  1 )
 
 #### Structure of the data
 
-We can think of the data like this
-```{r, eval = F}
+We can think of the data as structured like this
+```{r, echo = F}
 working <- student1.all
 working$i <- 1:nrow(working)
 
@@ -179,7 +459,9 @@ plot(working.tree)
 ```
 
 
-Plot boxplots.  Sex is set as the x axis, and then the two treatments are colored coded using fill =
+### Exploratory plot
+
+Plot boxplots.  Sex is set as the x axis, and then the 2 treatments are colored coded using fill =
 ```{r}
 ggboxplot(data = student1.all,
           y = "wing.score",
@@ -187,7 +469,7 @@ ggboxplot(data = student1.all,
           fill = "E.or.C")
 ```
 
-
+It look like we have an **interaction** effect.  In female flies the experimental (E) scores are lower than controls, but in males the E's are *higher*.
 
 For plotting it can be very helpful to make a new variable that combines two seperate colums.
 
@@ -230,7 +512,6 @@ This matches a model set up like this with no x-variable
 ggerrorplot(data = student1.all,
           y = "wing.score",
           x = NULL,
-          color = "sex",
           desc_stat = "mean_ci",
           size = 1.2)
 ```
@@ -291,7 +572,7 @@ ggerrorplot(data = student1.all,
 Now we can include both at the same time.  I call this an **additive model** because it assumes the effect of one variable is independent of what is going on with the other, so the effects of the experimenta are just added to the effect of being male or feamle.
 
 ```{r}
-lm.add    <- lm(wing.score ~ sex + E.or.C, data = student1.all)
+lm.add    <- lm(wing.score ~ 1+ sex + E.or.C, data = student1.all)
 ```
 
 This is actually a bit tricky to graph so we'll leave it alone.
@@ -328,7 +609,7 @@ ggerrorplot(data = student1.all,
 ```
 
 
-We can get the means by hand using dplyr if we pass both sex and E.or.C to group_by
+We can get the means by hand using dplyr if we pass both sex and E.or.C to group_by()
 ```{r}
 student1.all %>% 
   group_by(sex, E.or.C) %>%
@@ -336,13 +617,39 @@ student1.all %>%
 ```
 
 
-We get teh same results if we use the "group" variable
+We get the same results if we use the "group" variable we made
 ```{r, eval = F}
 student1.all %>% 
   group_by(group) %>%
   summarize(mean = mean(wing.score))
 ```
 
+Compare the values of the summary stats to the output of the summary() command.
+```{r}
+coef(summary(lm.intxn))
+```
+
+NOte that 
+
+* "sexM" can be interpreted as "sex? = M" 
+* "E.or.CE" as "E.or.C? = E" 
+* "sexM:E.or.CE" as "sex? = M x "
+
+
+How do we get from summary output of the model to the group means?  The grou means are
+
+1. F.C (female control) = 4.38
+1. F.E (female experimental) = 3.25
+1. M.C (male contorl) = 4.88
+1. M.E (male experimental) = 5.32
+
+
+We can substitute the appropriate numbers
+
+1. F.C = "(Int)" = 4.38
+1. F.E = "(Int)" + "E.or.CE" = 4.38 + -1.14          = 3.25
+1. M.C = "(Int)" + "sexM" = 4.38 + 0.507 = 4.88
+1. M.E = "(Int)" + "E.or.CE" + "sexM" + sexM:E.or.CE = 4.38 + -1.14 + 0.507 + 1.6 = 5.32
 
 ##### Model formulas
 

@@ -98,7 +98,7 @@ Since these data are uniquely structured
 
 ### Difference scores w/ pooled SD weights
 
-these notes not complted
+NB: these notes not completed
 ```{r, eval = F}
 m.diffs <- lm(diff ~ -1 + gene.allele, 
            data = data_summ)

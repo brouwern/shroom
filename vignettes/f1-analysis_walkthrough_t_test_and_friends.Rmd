@@ -21,23 +21,31 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-This tutorial walks through several types of anlayses that can be done using the shroom package.  THe focus will be data on using t-tests and similar methods to compare two groups.  In particular
+This tutorial walks through several types of anlayses that can be done using the *shroom* package.  The focus will be on situations that can be analyzed  using t-tests and similar methods to compare 2 groups.  In particular
 
-* Testing for groups differences using a t-test  (t.test
-* Cohen's d effect size for the differene between 2 means (cohen.d)
+* Testing for groups differences using a t-test  (t.test)
+* Cohen's d effect size for the differene between 2 means (effsizeeffsize:cohen.d)
 * Formulating a t-test as a linear model (lm)
 * Non-parametric test for ranked data (wilcox.test)
-* Non-parametric for skewed rank data (brunner.munzel.test)
+* Non-parametric for skewed rank data (lawstat::brunner.munzel.test)
 
-(TO DO: gls for Welch-type tests; effect size calculations with metafor; effect size for non-parametric tests)
+
+
+### TO DO
+
+Things not yet implemented
+
+* for Welch-type tests
+* effect size calculations with metafor
+* effect size for non-parametric tests
 
 
 ## Preliminaries
 
 ### Load packages
 
-
 Load the shroom package.  You can download it with instal.packages("shroom") if you haven't used it ever before.  See "Loading the shroom package" for more information.
+
 ```{r}
 library(shroom)
 ```
@@ -49,10 +57,10 @@ library(cowplot)
 
 library(dplyr)   #data cleaning
 
-library(car)     #?
+    library(car)     #?
 
-library(data.tree)# plotting data structure
-library(treemap)
+    library(data.tree)# plotting data structure
+    library(treemap)
 
 library(plotrix) #std.err function
 
@@ -76,7 +84,7 @@ data("wingscores")
 
 #### Loading the data from the shroom package
 
-For a real analysis you need to start from the .csv file with the raw data, data_ind_flies_expt1_2018.csv.  This data is included when you download the package.  If you search your computer for it you should be able to locate it.  It is in a diretory called "extdata" within the directory for shroom package which you downloaded..
+For a real analysis you need to start from the .csv file with the raw data, eg data_ind_flies_expt1_2018.csv if you are working with the 2018 shroom data.  This data is included when you download the package.  If you search your computer for it you should be able to locate it.  It is in a diretory called "extdata" within the directory for the *shroom* package which you downloaded.
 
 1. Save the file data_ind_flies_expt1_2018.csv to where you want to do your work for this project
 1. Set your working directory to the same folder where the file is saved.  This can be done through "Session" option of the RStudio menu  (this will occur automatically if you are using an R project).
